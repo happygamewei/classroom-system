@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.HomeworkMapper">
+    
+    <resultMap type="Homework" id="HomeworkResult">
+        <result property="homeworkId"    column="homework_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="userId"    column="user_id"    />
+        <result property="typeLabel"    column="type_label"    />
+        <result property="shareProtocol"    column="share_protocol"    />
+        <result property="process"    column="process"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="ifPublish"    column="If_publish"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="deadline"    column="deadline"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="approved"    column="approved"    />
+        <result property="unpaid"    column="unpaid"    />
+        <result property="isCheck"    column="is_check"    />
+        <result property="checkNumber"    column="check_number"    />
+        <result property="ifBack"    column="If_back"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHomeworkVo">
+        select homework_id, title, content, user_id, type_label, share_protocol, process, chapter_id, If_publish, publish_date, deadline, total_score, approved, unpaid, is_check, check_number, If_back, status, create_by, create_time, update_by, update_time from tb_homework
+    </sql>
+
+    <select id="selectHomeworkList" parameterType="Homework" resultMap="HomeworkResult">
+        <include refid="selectHomeworkVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="typeLabel != null  and typeLabel != ''"> and type_label = #{typeLabel}</if>
+            <if test="shareProtocol != null  and shareProtocol != ''"> and share_protocol = #{shareProtocol}</if>
+            <if test="process != null  and process != ''"> and process = #{process}</if>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="ifPublish != null  and ifPublish != ''"> and If_publish = #{ifPublish}</if>
+            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+            <if test="deadline != null "> and deadline = #{deadline}</if>
+            <if test="totalScore != null "> and total_score = #{totalScore}</if>
+            <if test="approved != null "> and approved = #{approved}</if>
+            <if test="unpaid != null "> and unpaid = #{unpaid}</if>
+            <if test="isCheck != null  and isCheck != ''"> and is_check = #{isCheck}</if>
+            <if test="checkNumber != null "> and check_number = #{checkNumber}</if>
+            <if test="ifBack != null  and ifBack != ''"> and If_back = #{ifBack}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectHomeworkByHomeworkId" parameterType="Long" resultMap="HomeworkResult">
+        <include refid="selectHomeworkVo"/>
+        where homework_id = #{homeworkId}
+    </select>
+        
+    <insert id="insertHomework" parameterType="Homework" useGeneratedKeys="true" keyProperty="homeworkId">
+        insert into tb_homework
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null">content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="typeLabel != null">type_label,</if>
+            <if test="shareProtocol != null">share_protocol,</if>
+            <if test="process != null">process,</if>
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="ifPublish != null">If_publish,</if>
+            <if test="publishDate != null">publish_date,</if>
+            <if test="deadline != null">deadline,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="approved != null">approved,</if>
+            <if test="unpaid != null">unpaid,</if>
+            <if test="isCheck != null">is_check,</if>
+            <if test="checkNumber != null">check_number,</if>
+            <if test="ifBack != null">If_back,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="typeLabel != null">#{typeLabel},</if>
+            <if test="shareProtocol != null">#{shareProtocol},</if>
+            <if test="process != null">#{process},</if>
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="ifPublish != null">#{ifPublish},</if>
+            <if test="publishDate != null">#{publishDate},</if>
+            <if test="deadline != null">#{deadline},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+            <if test="approved != null">#{approved},</if>
+            <if test="unpaid != null">#{unpaid},</if>
+            <if test="isCheck != null">#{isCheck},</if>
+            <if test="checkNumber != null">#{checkNumber},</if>
+            <if test="ifBack != null">#{ifBack},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHomework" parameterType="Homework">
+        update tb_homework
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="typeLabel != null">type_label = #{typeLabel},</if>
+            <if test="shareProtocol != null">share_protocol = #{shareProtocol},</if>
+            <if test="process != null">process = #{process},</if>
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="ifPublish != null">If_publish = #{ifPublish},</if>
+            <if test="publishDate != null">publish_date = #{publishDate},</if>
+            <if test="deadline != null">deadline = #{deadline},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+            <if test="approved != null">approved = #{approved},</if>
+            <if test="unpaid != null">unpaid = #{unpaid},</if>
+            <if test="isCheck != null">is_check = #{isCheck},</if>
+            <if test="checkNumber != null">check_number = #{checkNumber},</if>
+            <if test="ifBack != null">If_back = #{ifBack},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where homework_id = #{homeworkId}
+    </update>
+
+    <delete id="deleteHomeworkByHomeworkId" parameterType="Long">
+        delete from tb_homework where homework_id = #{homeworkId}
+    </delete>
+
+    <delete id="deleteHomeworkByHomeworkIds" parameterType="String">
+        delete from tb_homework where homework_id in 
+        <foreach item="homeworkId" collection="array" open="(" separator="," close=")">
+            #{homeworkId}
+        </foreach>
+    </delete>
+</mapper>

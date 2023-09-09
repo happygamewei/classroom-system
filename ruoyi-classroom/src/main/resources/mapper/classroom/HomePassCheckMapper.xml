@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.HomePassCheckMapper">
+    
+    <resultMap type="HomePassCheck" id="HomePassCheckResult">
+        <result property="homeId"    column="home_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="ifPass"    column="if_pass"    />
+        <result property="ifCheck"    column="if_check"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHomePassCheckVo">
+        select home_id, student_id, teacher_id, if_pass, if_check, status, create_by, create_time, update_by, update_time from tb_home_pass_check
+    </sql>
+
+    <select id="selectHomePassCheckList" parameterType="HomePassCheck" resultMap="HomePassCheckResult">
+        <include refid="selectHomePassCheckVo"/>
+        <where>  
+            <if test="ifPass != null  and ifPass != ''"> and if_pass = #{ifPass}</if>
+            <if test="ifCheck != null  and ifCheck != ''"> and if_check = #{ifCheck}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectHomePassCheckByHomeId" parameterType="Long" resultMap="HomePassCheckResult">
+        <include refid="selectHomePassCheckVo"/>
+        where home_id = #{homeId}
+    </select>
+        
+    <insert id="insertHomePassCheck" parameterType="HomePassCheck">
+        insert into tb_home_pass_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="homeId != null">home_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="ifPass != null">if_pass,</if>
+            <if test="ifCheck != null">if_check,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="homeId != null">#{homeId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="ifPass != null">#{ifPass},</if>
+            <if test="ifCheck != null">#{ifCheck},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHomePassCheck" parameterType="HomePassCheck">
+        update tb_home_pass_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="ifPass != null">if_pass = #{ifPass},</if>
+            <if test="ifCheck != null">if_check = #{ifCheck},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where home_id = #{homeId}
+    </update>
+
+    <delete id="deleteHomePassCheckByHomeId" parameterType="Long">
+        delete from tb_home_pass_check where home_id = #{homeId}
+    </delete>
+
+    <delete id="deleteHomePassCheckByHomeIds" parameterType="String">
+        delete from tb_home_pass_check where home_id in 
+        <foreach item="homeId" collection="array" open="(" separator="," close=")">
+            #{homeId}
+        </foreach>
+    </delete>
+</mapper>

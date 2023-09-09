@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.LikesMapper">
+    
+    <resultMap type="Likes" id="LikesResult">
+        <result property="id"    column="id"    />
+        <result property="commentId"    column="comment_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectLikesVo">
+        select id, comment_id, user_id, type from tb_likes
+    </sql>
+
+    <select id="selectLikesList" parameterType="Likes" resultMap="LikesResult">
+        <include refid="selectLikesVo"/>
+        <where>  
+            <if test="commentId != null "> and comment_id = #{commentId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectLikesById" parameterType="Long" resultMap="LikesResult">
+        <include refid="selectLikesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLikes" parameterType="Likes">
+        insert into tb_likes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="commentId != null">comment_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="commentId != null">#{commentId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLikes" parameterType="Likes">
+        update tb_likes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="commentId != null">comment_id = #{commentId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLikesById" parameterType="Long">
+        delete from tb_likes where id = #{id}
+    </delete>
+
+    <delete id="deleteLikesByIds" parameterType="String">
+        delete from tb_likes where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

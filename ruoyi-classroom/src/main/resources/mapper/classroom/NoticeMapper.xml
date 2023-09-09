@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.NoticeMapper">
+    
+    <resultMap type="Notice" id="NoticeResult">
+        <result property="noticeId"    column="notice_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="typeLabel"    column="type_label"    />
+        <result property="shareProtocol"    column="share_protocol"    />
+        <result property="process"    column="process"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="readNumber"    column="read_number"    />
+        <result property="isTop"    column="is_top"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="documentLocation"    column="document_location"    />
+        <result property="pictureLocation"    column="picture_location"    />
+    </resultMap>
+
+    <sql id="selectNoticeVo">
+        select notice_id, title, content, type_label, share_protocol, process, chapter_id, publish_date, read_number, is_top, status, create_by, create_time, update_by, update_time, document_location, picture_location from tb_notice
+    </sql>
+
+    <select id="selectNoticeList" parameterType="Notice" resultMap="NoticeResult">
+        <include refid="selectNoticeVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="typeLabel != null  and typeLabel != ''"> and type_label = #{typeLabel}</if>
+            <if test="shareProtocol != null  and shareProtocol != ''"> and share_protocol = #{shareProtocol}</if>
+            <if test="process != null  and process != ''"> and process = #{process}</if>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+            <if test="isTop != null  and isTop != ''"> and is_top = #{isTop}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="documentLocation != null  and documentLocation != ''"> and document_location = #{documentLocation}</if>
+            <if test="pictureLocation != null  and pictureLocation != ''"> and picture_location = #{pictureLocation}</if>
+        </where>
+    </select>
+    
+    <select id="selectNoticeByNoticeId" parameterType="Long" resultMap="NoticeResult">
+        <include refid="selectNoticeVo"/>
+        where notice_id = #{noticeId}
+    </select>
+        
+    <insert id="insertNotice" parameterType="Notice">
+        insert into tb_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noticeId != null">notice_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null">content,</if>
+            <if test="typeLabel != null">type_label,</if>
+            <if test="shareProtocol != null">share_protocol,</if>
+            <if test="process != null">process,</if>
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="publishDate != null">publish_date,</if>
+            <if test="readNumber != null">read_number,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="documentLocation != null">document_location,</if>
+            <if test="pictureLocation != null">picture_location,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noticeId != null">#{noticeId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="typeLabel != null">#{typeLabel},</if>
+            <if test="shareProtocol != null">#{shareProtocol},</if>
+            <if test="process != null">#{process},</if>
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="publishDate != null">#{publishDate},</if>
+            <if test="readNumber != null">#{readNumber},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="documentLocation != null">#{documentLocation},</if>
+            <if test="pictureLocation != null">#{pictureLocation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNotice" parameterType="Notice">
+        update tb_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="typeLabel != null">type_label = #{typeLabel},</if>
+            <if test="shareProtocol != null">share_protocol = #{shareProtocol},</if>
+            <if test="process != null">process = #{process},</if>
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="publishDate != null">publish_date = #{publishDate},</if>
+            <if test="readNumber != null">read_number = #{readNumber},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="documentLocation != null">document_location = #{documentLocation},</if>
+            <if test="pictureLocation != null">picture_location = #{pictureLocation},</if>
+        </trim>
+        where notice_id = #{noticeId}
+    </update>
+
+    <delete id="deleteNoticeByNoticeId" parameterType="Long">
+        delete from tb_notice where notice_id = #{noticeId}
+    </delete>
+
+    <delete id="deleteNoticeByNoticeIds" parameterType="String">
+        delete from tb_notice where notice_id in 
+        <foreach item="noticeId" collection="array" open="(" separator="," close=")">
+            #{noticeId}
+        </foreach>
+    </delete>
+</mapper>

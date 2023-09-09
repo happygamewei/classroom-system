@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.CommentMapper">
+    
+    <resultMap type="Comment" id="CommentResult">
+        <result property="commentId"    column="comment_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="typeId"    column="type_id"    />
+        <result property="content"    column="content"    />
+        <result property="toCommentUserId"    column="to_comment_user_id"    />
+        <result property="toCommentId"    column="to_comment_id"    />
+        <result property="likesNumber"    column="likes_number"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectCommentVo">
+        select comment_id, parent_id, type_id, content, to_comment_user_id, to_comment_id, likes_number, status, create_by, create_time, update_by, update_time from tb_comment
+    </sql>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>  
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="typeId != null "> and type_id = #{typeId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="toCommentUserId != null "> and to_comment_user_id = #{toCommentUserId}</if>
+            <if test="toCommentId != null "> and to_comment_id = #{toCommentId}</if>
+            <if test="likesNumber != null "> and likes_number = #{likesNumber}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCommentByCommentId" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+        
+    <insert id="insertComment" parameterType="Comment">
+        insert into tb_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">comment_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="toCommentUserId != null">to_comment_user_id,</if>
+            <if test="toCommentId != null">to_comment_id,</if>
+            <if test="likesNumber != null">likes_number,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">#{commentId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="toCommentUserId != null">#{toCommentUserId},</if>
+            <if test="toCommentId != null">#{toCommentId},</if>
+            <if test="likesNumber != null">#{likesNumber},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update tb_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="typeId != null">type_id = #{typeId},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="toCommentUserId != null">to_comment_user_id = #{toCommentUserId},</if>
+            <if test="toCommentId != null">to_comment_id = #{toCommentId},</if>
+            <if test="likesNumber != null">likes_number = #{likesNumber},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentByCommentId" parameterType="Long">
+        delete from tb_comment where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteCommentByCommentIds" parameterType="String">
+        delete from tb_comment where comment_id in 
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+</mapper>

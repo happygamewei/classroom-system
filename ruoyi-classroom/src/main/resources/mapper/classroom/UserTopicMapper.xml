@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.UserTopicMapper">
+    
+    <resultMap type="UserTopic" id="UserTopicResult">
+        <result property="userTopicId"    column="user_topic_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="topicId"    column="topic_id"    />
+        <result property="isReadLabel"    column="isReadLabel"    />
+        <result property="isLike"    column="isLike"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectUserTopicVo">
+        select user_topic_id, user_id, topic_id, isReadLabel, isLike, status, create_by, create_time, update_by, update_time from tb_user_topic
+    </sql>
+
+    <select id="selectUserTopicList" parameterType="UserTopic" resultMap="UserTopicResult">
+        <include refid="selectUserTopicVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="topicId != null "> and topic_id = #{topicId}</if>
+            <if test="isReadLabel != null  and isReadLabel != ''"> and isReadLabel = #{isReadLabel}</if>
+            <if test="isLike != null  and isLike != ''"> and isLike = #{isLike}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserTopicByUserTopicId" parameterType="Long" resultMap="UserTopicResult">
+        <include refid="selectUserTopicVo"/>
+        where user_topic_id = #{userTopicId}
+    </select>
+        
+    <insert id="insertUserTopic" parameterType="UserTopic">
+        insert into tb_user_topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userTopicId != null">user_topic_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="topicId != null">topic_id,</if>
+            <if test="isReadLabel != null">isReadLabel,</if>
+            <if test="isLike != null">isLike,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userTopicId != null">#{userTopicId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="topicId != null">#{topicId},</if>
+            <if test="isReadLabel != null">#{isReadLabel},</if>
+            <if test="isLike != null">#{isLike},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserTopic" parameterType="UserTopic">
+        update tb_user_topic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="topicId != null">topic_id = #{topicId},</if>
+            <if test="isReadLabel != null">isReadLabel = #{isReadLabel},</if>
+            <if test="isLike != null">isLike = #{isLike},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_topic_id = #{userTopicId}
+    </update>
+
+    <delete id="deleteUserTopicByUserTopicId" parameterType="Long">
+        delete from tb_user_topic where user_topic_id = #{userTopicId}
+    </delete>
+
+    <delete id="deleteUserTopicByUserTopicIds" parameterType="String">
+        delete from tb_user_topic where user_topic_id in 
+        <foreach item="userTopicId" collection="array" open="(" separator="," close=")">
+            #{userTopicId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.TopicMapper">
+    
+    <resultMap type="Topic" id="TopicResult">
+        <result property="topicId"    column="topic_id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="typeLabel"    column="type_label"    />
+        <result property="shareProtocol"    column="share_protocol"    />
+        <result property="process"    column="process"    />
+        <result property="chapterId"    column="chapter_id"    />
+        <result property="publishDate"    column="publish_date"    />
+        <result property="deadline"    column="deadline"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="leastReplyNumber"    column="least_reply_number"    />
+        <result property="joinNumber"    column="join_number"    />
+        <result property="likeCount"    column="like_count"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectTopicVo">
+        select topic_id, title, content, type_label, share_protocol, process, chapter_id, publish_date, deadline, total_score, least_reply_number, join_number, like_count, status, create_by, create_time, update_by, update_time, user_id from tb_topic
+    </sql>
+
+    <select id="selectTopicList" parameterType="Topic" resultMap="TopicResult">
+        <include refid="selectTopicVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="typeLabel != null  and typeLabel != ''"> and type_label = #{typeLabel}</if>
+            <if test="shareProtocol != null  and shareProtocol != ''"> and share_protocol = #{shareProtocol}</if>
+            <if test="process != null  and process != ''"> and process = #{process}</if>
+            <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
+            <if test="publishDate != null "> and publish_date = #{publishDate}</if>
+            <if test="deadline != null "> and deadline = #{deadline}</if>
+            <if test="totalScore != null "> and total_score = #{totalScore}</if>
+            <if test="leastReplyNumber != null "> and least_reply_number = #{leastReplyNumber}</if>
+            <if test="joinNumber != null "> and join_number = #{joinNumber}</if>
+            <if test="likeCount != null "> and like_count = #{likeCount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTopicByTopicId" parameterType="Long" resultMap="TopicResult">
+        <include refid="selectTopicVo"/>
+        where topic_id = #{topicId}
+    </select>
+        
+    <insert id="insertTopic" parameterType="Topic" useGeneratedKeys="true" keyProperty="topicId">
+        insert into tb_topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="typeLabel != null">type_label,</if>
+            <if test="shareProtocol != null">share_protocol,</if>
+            <if test="process != null">process,</if>
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="publishDate != null">publish_date,</if>
+            <if test="deadline != null">deadline,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="leastReplyNumber != null">least_reply_number,</if>
+            <if test="joinNumber != null">join_number,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="typeLabel != null">#{typeLabel},</if>
+            <if test="shareProtocol != null">#{shareProtocol},</if>
+            <if test="process != null">#{process},</if>
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="publishDate != null">#{publishDate},</if>
+            <if test="deadline != null">#{deadline},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+            <if test="leastReplyNumber != null">#{leastReplyNumber},</if>
+            <if test="joinNumber != null">#{joinNumber},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTopic" parameterType="Topic">
+        update tb_topic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="typeLabel != null">type_label = #{typeLabel},</if>
+            <if test="shareProtocol != null">share_protocol = #{shareProtocol},</if>
+            <if test="process != null">process = #{process},</if>
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="publishDate != null">publish_date = #{publishDate},</if>
+            <if test="deadline != null">deadline = #{deadline},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+            <if test="leastReplyNumber != null">least_reply_number = #{leastReplyNumber},</if>
+            <if test="joinNumber != null">join_number = #{joinNumber},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where topic_id = #{topicId}
+    </update>
+
+    <delete id="deleteTopicByTopicId" parameterType="Long">
+        delete from tb_topic where topic_id = #{topicId}
+    </delete>
+
+    <delete id="deleteTopicByTopicIds" parameterType="String">
+        delete from tb_topic where topic_id in 
+        <foreach item="topicId" collection="array" open="(" separator="," close=")">
+            #{topicId}
+        </foreach>
+    </delete>
+</mapper>

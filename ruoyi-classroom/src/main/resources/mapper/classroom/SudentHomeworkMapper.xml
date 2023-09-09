@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.classroom.mapper.SudentHomeworkMapper">
+    
+    <resultMap type="SudentHomework" id="SudentHomeworkResult">
+        <result property="shId"    column="sh_id"    />
+        <result property="homeworkId"    column="homework_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="submitStatus"    column="submit_status"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="wordNumber"    column="word_number"    />
+        <result property="checkNumber"    column="check_number"    />
+        <result property="urgeSubmit"    column="urge_submit"    />
+        <result property="grade"    column="grade"    />
+        <result property="workStatus"    column="work_status"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSudentHomeworkVo">
+        select sh_id, homework_id, student_id, file_path, submit_status, submit_time, word_number, check_number, urge_submit, grade, work_status, status, create_by, create_time, update_by, update_time from tb_sudent_homework
+    </sql>
+
+    <select id="selectSudentHomeworkList" parameterType="SudentHomework" resultMap="SudentHomeworkResult">
+        <include refid="selectSudentHomeworkVo"/>
+        <where>  
+            <if test="homeworkId != null "> and homework_id = #{homeworkId}</if>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="submitStatus != null  and submitStatus != ''"> and submit_status = #{submitStatus}</if>
+            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+            <if test="wordNumber != null "> and word_number = #{wordNumber}</if>
+            <if test="checkNumber != null "> and check_number = #{checkNumber}</if>
+            <if test="urgeSubmit != null "> and urge_submit = #{urgeSubmit}</if>
+            <if test="grade != null "> and grade = #{grade}</if>
+            <if test="workStatus != null  and workStatus != ''"> and work_status = #{workStatus}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSudentHomeworkByShId" parameterType="Long" resultMap="SudentHomeworkResult">
+        <include refid="selectSudentHomeworkVo"/>
+        where sh_id = #{shId}
+    </select>
+        
+    <insert id="insertSudentHomework" parameterType="SudentHomework" useGeneratedKeys="true" keyProperty="shId">
+        insert into tb_sudent_homework
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="homeworkId != null">homework_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="submitStatus != null">submit_status,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="wordNumber != null">word_number,</if>
+            <if test="checkNumber != null">check_number,</if>
+            <if test="urgeSubmit != null">urge_submit,</if>
+            <if test="grade != null">grade,</if>
+            <if test="workStatus != null">work_status,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="homeworkId != null">#{homeworkId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="submitStatus != null">#{submitStatus},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="wordNumber != null">#{wordNumber},</if>
+            <if test="checkNumber != null">#{checkNumber},</if>
+            <if test="urgeSubmit != null">#{urgeSubmit},</if>
+            <if test="grade != null">#{grade},</if>
+            <if test="workStatus != null">#{workStatus},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSudentHomework" parameterType="SudentHomework">
+        update tb_sudent_homework
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="homeworkId != null">homework_id = #{homeworkId},</if>
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="submitStatus != null">submit_status = #{submitStatus},</if>
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+            <if test="wordNumber != null">word_number = #{wordNumber},</if>
+            <if test="checkNumber != null">check_number = #{checkNumber},</if>
+            <if test="urgeSubmit != null">urge_submit = #{urgeSubmit},</if>
+            <if test="grade != null">grade = #{grade},</if>
+            <if test="workStatus != null">work_status = #{workStatus},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where sh_id = #{shId}
+    </update>
+
+    <delete id="deleteSudentHomeworkByShId" parameterType="Long">
+        delete from tb_sudent_homework where sh_id = #{shId}
+    </delete>
+
+    <delete id="deleteSudentHomeworkByShIds" parameterType="String">
+        delete from tb_sudent_homework where sh_id in 
+        <foreach item="shId" collection="array" open="(" separator="," close=")">
+            #{shId}
+        </foreach>
+    </delete>
+</mapper>
