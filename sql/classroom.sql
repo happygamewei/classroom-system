@@ -261,7 +261,8 @@ CREATE TABLE tb_resource (
     title           VARCHAR(64)     NOT NULL                    COMMENT '资料标题',
     path            VARCHAR(64)     NOT NULL                    COMMENT '资料地址',
     size            VARCHAR(20)     default null                COMMENT '资料大小',
-    is_download     INT             default '0'                 COMMENT '是否允许下载，0否，1是',
+    user_id         BIGINT          default null                COMMENT '创建者id',
+    is_download     CHAR(1)         default ''                  COMMENT '是否允许下载，0否，1是',
     type            INT             default null                COMMENT '类型',
     type_label      VARCHAR(50)     default null                COMMENT '活动类型标签',
     share_protocol  VARCHAR(50)     default null                COMMENT '共享协议',
@@ -272,7 +273,8 @@ CREATE TABLE tb_resource (
     total_score     INT             default null                COMMENT '总分',
     completed       INT             default null                COMMENT '已完成人数',
     studying        INT             default null                COMMENT '学习中人数',
-    status          INT             default '0'                 COMMENT '状态，0禁用，1激活',
+    nostudying      INT             default null                COMMENT '未学习人数',
+    status          CHAR(1)          default ''                 COMMENT '状态，0禁用，1激活',
     create_by       VARCHAR(20)     NOT NULL                    COMMENT '创建人',
     create_time     TIMESTAMP       NOT NULL                    COMMENT '创建时间',
     update_by       VARCHAR(20)     default null                COMMENT '更新人',
@@ -293,69 +295,6 @@ CREATE TABLE tb_exam_record (
     update_time     TIMESTAMP                                   COMMENT '更新时间'
 )engine=innodb auto_increment=1 comment = '考试记录表';
 
-
-drop table if exists tb_homework;
-create table tb_homework (
-    homework_id          int(30)         not null          comment '作业id',
-    title                varchar(30)     not null          comment '作业标题',
-    content              longtext        default null      comment '作业内容',
-    type_label           varchar(30)                       comment '活动类型标签',
-    share_protocol       varchar(30)                       comment '共享协议',
-    process              varchar(30)                       comment '应用环节',
-    chapter_id           int(30)                           comment '所属章节',
-    publish_date         datetime                          comment '发布时间',
-    deadline             datetime                          comment '截至时间',
-    total_score          int(5)                            comment '总分',
-    approved             int(30)         default 0         comment '已批完',
-    unpaid               int(30)                           comment '未交',
-    is_check             int(1)                            comment '是否查重，0否，1是',
-    status               int(1)                            comment 'int	状态，0禁用，1激活',
-    create_by            varchar(64)     default ''        comment '创建者',
-    create_time 	        datetime                          comment '创建时间',
-    update_by            varchar(64)     default ''        comment '更新者',
-    update_time          datetime                          comment '更新时间',
-    primary key (homework_id )
-) engine=innodb auto_increment=1 comment = '发布作业表';
-
-drop table if exists tb_sudent_homework;
-create table tb_sudent_homework (
-    sh_id                int(30)         not null          comment '学生作业表id',
-    homework_id          int(30)         not null          comment '作业id',
-    student_id           int(30)         not null          comment '学生id',
-    submit_status        int(1)                            comment '提交状态，0未提交，1提交',
-    submit_time	        datetime                          comment '提交时间',
-    word_number          int(10)                           comment '字数',
-    chapter_id           int(30)                           comment '所属章节',
-    check_number         int(10)                           comment '批阅次数',
-    grade                int(5)                            comment '成绩',
-    work_status          int(1)                            comment '作业状态，1批改，2打回',
-    status               int(1)                            comment '状态，0禁用，1激活',
-    create_by            varchar(64)     default ''        comment '创建者',
-    create_time 	        datetime                          comment '创建时间',
-    update_by            varchar(64)     default ''        comment '更新者',
-    update_time          datetime                          comment '更新时间',
-    primary key (sh_id)
-) engine=innodb auto_increment=1 comment = '学生作业表';
-
-drop table if exists tb_notice;
-create table tb_notice(
-    notice_id            int(30)         not null          comment '公告id',
-    title                varchar(30)     not null          comment '公告标题',
-    content              longtext        default null      comment '公告内容',
-    type_label           varchar(30)                       comment '活动类型标签',
-    share_protocol       varchar(30)                       comment '共享协议',
-    process              varchar(30)                       comment '应用环节',
-    chapter_id           int(30)                           comment '所属章节',
-    publish_date         datetime                          comment '发布时间',
-    read_number          int(30)                           comment '已读数量',
-    is_top               int(1)                            comment '是否置顶，0否，1是',
-    status               int(1)                            comment 'int	状态，0禁用，1激活',
-    create_by            varchar(64)     default ''        comment '创建者',
-    create_time 	        datetime                          comment '创建时间',
-    update_by            varchar(64)     default ''        comment '更新者',
-    update_time          datetime                          comment '更新时间',
-    primary key (notice_id)
-) engine=innodb auto_increment=1 comment = '公告表';
 
 
 
