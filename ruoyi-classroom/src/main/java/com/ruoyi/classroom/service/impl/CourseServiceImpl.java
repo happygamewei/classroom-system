@@ -1,7 +1,10 @@
 package com.ruoyi.classroom.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.classroom.utils.RandomStringGenerator;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.classroom.mapper.CourseMapper;
@@ -53,7 +56,13 @@ public class CourseServiceImpl implements ICourseService
     @Override
     public int insertCourse(Course course)
     {
+        //设置课程码
+        course.setCode(RandomStringGenerator.generateRandomString(6));
+        //设置创建者
+        course.setCreateBy(SecurityUtils.getUsername());
         course.setCreateTime(DateUtils.getNowDate());
+        //设置状态
+        course.setStatus("0");
         return courseMapper.insertCourse(course);
     }
 

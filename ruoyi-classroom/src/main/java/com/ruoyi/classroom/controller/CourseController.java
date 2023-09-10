@@ -37,7 +37,7 @@ public class CourseController extends BaseController
     /**
      * 查询课程管理列表
      */
-    @PreAuthorize("@ss.hasPermi('classroom:course:list')")
+//    @PreAuthorize("@ss.hasPermi('classroom:course:list')")
     @GetMapping("/list")
     public TableDataInfo list(Course course)
     {
@@ -57,6 +57,11 @@ public class CourseController extends BaseController
         List<Course> list = courseService.selectCourseList(course);
         ExcelUtil<Course> util = new ExcelUtil<Course>(Course.class);
         util.exportExcel(response, list, "课程管理数据");
+    }
+
+    @GetMapping(value = "/byId/{courseId}")
+    public AjaxResult getInfoById(@PathVariable("courseId") Long courseId){
+        return success(courseService.selectCourseByCourseId(courseId));
     }
 
     /**

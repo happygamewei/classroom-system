@@ -103,7 +103,6 @@
 
     <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="课程id，主键" align="center" prop="courseId" />
       <el-table-column label="课程名称" align="center" prop="name" />
       <el-table-column label="课程码" align="center" prop="code" />
       <el-table-column label="教学班级" align="center" prop="teachClass" />
@@ -115,7 +114,7 @@
       <el-table-column label="授课地点" align="center" prop="place" />
       <el-table-column label="机构相关" align="center" prop="institutional" />
       <el-table-column label="参加人数" align="center" prop="joinNumber" />
-      <el-table-column label="状态，0禁用，1激活" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -135,7 +134,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -145,29 +144,88 @@
     />
 
     <!-- 添加或修改课程管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="课程名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入课程名称" />
-        </el-form-item>
-        <el-form-item label="课程码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入课程码" />
-        </el-form-item>
-        <el-form-item label="教学班级" prop="teachClass">
-          <el-input v-model="form.teachClass" placeholder="请输入教学班级" />
-        </el-form-item>
-        <el-form-item label="学时数" prop="creditHours">
-          <el-input v-model="form.creditHours" placeholder="请输入学时数" />
-        </el-form-item>
-        <el-form-item label="课程介绍">
-          <editor v-model="form.introduce" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="授课地点" prop="place">
-          <el-input v-model="form.place" placeholder="请输入授课地点" />
-        </el-form-item>
-        <el-form-item label="参加人数" prop="joinNumber">
-          <el-input v-model="form.joinNumber" placeholder="请输入参加人数" />
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="课程名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入课程名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="教学班级" prop="teachClass">
+              <el-input v-model="form.teachClass" placeholder="请输入教学班级" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="学年" prop="schoolYear">
+              <el-select v-model="form.schoolYear" placeholder="请选择学年" style="width: 250px">
+                <el-option
+                  v-for="dict in dict.type.class_school_year"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="学期" prop="term">
+              <el-select v-model="form.term" placeholder="请选择学期" style="width: 250px">
+                <el-option
+                  v-for="dict in dict.type.class_term"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="学时数" prop="creditHours">
+              <el-input-number v-model="form.creditHours" controls-position="right" :min="0" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="授课地点" prop="place">
+              <el-input v-model="form.place" placeholder="请输入授课地点" />
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="授课模式" prop="teachMode">
+              <el-radio-group v-model="form.teachMode">
+                <el-radio
+                  v-for="dict in dict.type.class_teach_mode"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="机构相关" prop="institutional">
+              <el-radio-group v-model="form.institutional">
+                <el-radio
+                  v-for="dict in dict.type.class_institutional"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+            <el-form-item label="课程介绍">
+              <editor v-model="form.introduce" :min-height="192"/>
+            </el-form-item>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -182,6 +240,7 @@ import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api
 
 export default {
   name: "Course",
+  dicts: ['class_school_year', 'class_term', 'class_teach_mode', 'class_institutional'],
   data() {
     return {
       // 遮罩层
@@ -325,7 +384,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.teachMode = this.form.teachMode.join(",");
+          // this.form.teachMode = this.form.teachMode.join(",");
           if (this.form.courseId != null) {
             updateCourse(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
