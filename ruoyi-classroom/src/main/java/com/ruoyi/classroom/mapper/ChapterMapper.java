@@ -58,4 +58,18 @@ public interface ChapterMapper
      * @return 结果
      */
     public int deleteChapterByChapterIds(Long[] chapterIds);
+
+    /**
+     * 根据ids查询chapter
+     * @param chapterIds
+     * @return
+     */
+    List<Chapter> selectChapterByChapterIds(List<Long> chapterIds);
+
+    /**
+     * 根据章节id查询学时
+     * @param chapterId
+     * @return
+     */
+    Integer selectCreditHoursByCourseId(Long chapterId);
 }

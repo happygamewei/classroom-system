@@ -2,6 +2,7 @@ package com.ruoyi.classroom.mapper;
 
 import java.util.List;
 import com.ruoyi.classroom.domain.Course;
+import com.ruoyi.classroom.domain.vo.CourseSmallVo;
 
 /**
  * 课程管理Mapper接口
@@ -58,4 +59,17 @@ public interface CourseMapper
      * @return 结果
      */
     public int deleteCourseByCourseIds(Long[] courseIds);
+
+    /**
+     * 在chapter中查询课程
+     * @return
+     */
+    List<CourseSmallVo> selectCourseInChapter();
+
+    /**
+     * 根据课程id查询课程学时
+     * @param courseId
+     * @return
+     */
+    Integer selectCreditHoursByCourseId(Long courseId);
 }

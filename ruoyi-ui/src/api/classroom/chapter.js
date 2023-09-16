@@ -42,3 +42,11 @@ export function delChapter(chapterId) {
     method: 'delete'
   })
 }
+
+// 查询课程
+export function getCourseInfo() {
+  return request({
+    url: '/classroom/chapter/course',
+    method: 'get'
+  })
+}

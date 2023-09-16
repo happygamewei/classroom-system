@@ -2,6 +2,9 @@ package com.ruoyi.classroom.service;
 
 import java.util.List;
 import com.ruoyi.classroom.domain.Chapter;
+import com.ruoyi.classroom.domain.dto.ChapterDto;
+import com.ruoyi.classroom.domain.vo.ChapterVo;
+import com.ruoyi.classroom.domain.vo.CourseSmallVo;
 
 /**
  * 章节Service接口
@@ -33,7 +36,7 @@ public interface IChapterService
      * @param chapter 章节
      * @return 结果
      */
-    public int insertChapter(Chapter chapter);
+    public int insertChapter(ChapterDto chapter);
 
     /**
      * 修改章节
@@ -58,4 +61,17 @@ public interface IChapterService
      * @return 结果
      */
     public int deleteChapterByChapterId(Long chapterId);
+
+    /**
+     * 查询课程
+     * @return
+     */
+    List<CourseSmallVo> getCourse();
+
+    /**
+     * 根据课程id查询章节
+     * @param courseId
+     * @return
+     */
+    List<Chapter> getChapterByCourseId(Long courseId);
 }

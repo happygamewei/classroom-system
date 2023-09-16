@@ -17,8 +17,26 @@ public class RandomStringGenerator {
     }
 
 //    public static void main(String[] args) {
-//        int length = 6;
-//        String randomString = generateRandomString(length);
-//        System.out.println("Random 6-character string: " + randomString);
+////        int length = 6;
+////        String randomString = generateRandomString(length);
+////        System.out.println("Random 6-character string: " + randomString);
+//
+////        Integer a = 9;
+////        int n1 = System.identityHashCode(a);
+////        System.out.println(n1);
+////        int n3 = System.identityHashCode(a);
+////        System.out.println(n3);
+////        a += 10;
+////        int n2 = System.identityHashCode(a);
+////        System.out.println(n2);
+////        System.out.println(a);
+//
+//        Integer a = 10;
+//        int n1 = System.identityHashCode(a);
+//        System.out.println(n1);
+//        Integer b = 10;
+//        int n2 = System.identityHashCode(b);
+//        System.out.println(n2);
+//        System.out.println(a == b);
 //    }
 }

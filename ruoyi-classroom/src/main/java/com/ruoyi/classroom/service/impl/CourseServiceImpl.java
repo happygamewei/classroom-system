@@ -1,7 +1,13 @@
 package com.ruoyi.classroom.service.impl;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.ruoyi.classroom.domain.CourseChapter;
+import com.ruoyi.classroom.domain.vo.CourseContentVo;
+import com.ruoyi.classroom.mapper.ChapterMapper;
+import com.ruoyi.classroom.mapper.CourseChapterMapper;
 import com.ruoyi.classroom.utils.RandomStringGenerator;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -22,6 +28,12 @@ public class CourseServiceImpl implements ICourseService
 {
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private CourseChapterMapper courseChapterMapper;
+
+    @Autowired
+    private ChapterMapper chapterMapper;
 
     /**
      * 查询课程管理
@@ -101,5 +113,35 @@ public class CourseServiceImpl implements ICourseService
     public int deleteCourseByCourseId(Long courseId)
     {
         return courseMapper.deleteCourseByCourseId(courseId);
+    }
+
+    /**
+     * 得到课程相关信息
+     * @param courseId
+     * @return
+     */
+    @Override
+    public CourseContentVo getCourseContentInfo(Long courseId) {
+        // 查询课程和章节的关系
+        List<CourseChapter> courseChapters = courseChapterMapper.selectChaptersByCourserId(courseId);
+        CourseContentVo courseContentVo = new CourseContentVo();
+        courseContentVo.setChapterNumber(courseChapters.size());
+
+        // 获得课程总学时数
+        Integer courseHour = courseMapper.selectCreditHoursByCourseId(courseId);
+        courseContentVo.setCreditHours(courseHour);
+
+        // 获取已经分配的学时数
+        AtomicInteger allocated = new AtomicInteger(0);
+        courseChapters.stream().forEach(courseChapter -> {
+            Long chapterId = courseChapter.getChapterId();
+            Integer chapterHour = chapterMapper.selectCreditHoursByCourseId(chapterId);
+            allocated.addAndGet(chapterHour);
+        });
+        courseContentVo.setAllocatedHours(allocated.get());
+
+        // 获取课程中的活动数
+        courseContentVo.setActiveNumber(3);
+        return courseContentVo;
     }
 }

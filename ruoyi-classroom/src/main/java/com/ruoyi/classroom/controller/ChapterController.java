@@ -2,6 +2,9 @@ package com.ruoyi.classroom.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.classroom.domain.dto.ChapterDto;
+import com.ruoyi.classroom.domain.vo.CourseSmallVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +35,17 @@ public class ChapterController extends BaseController
 {
     @Autowired
     private IChapterService chapterService;
+
+    @GetMapping("/byCourseId/{courseId}")
+    public AjaxResult getChapterByCourseId(@PathVariable("courseId") Long courseId){
+        return success(chapterService.getChapterByCourseId(courseId));
+    }
+
+    @GetMapping("/course")
+    public AjaxResult getCourse() {
+        List<CourseSmallVo> courseSmallVoList = chapterService.getCourse();
+        return success(courseSmallVoList);
+    }
 
     /**
      * 查询章节列表
@@ -73,7 +87,7 @@ public class ChapterController extends BaseController
     @PreAuthorize("@ss.hasPermi('classroom:chapter:add')")
     @Log(title = "章节", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Chapter chapter)
+    public AjaxResult add(@RequestBody ChapterDto chapter)
     {
         return toAjax(chapterService.insertChapter(chapter));
     }

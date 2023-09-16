@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.ChapterMapper">
     
-    <resultMap type="Chapter" id="ChapterResult">
+    <resultMap type="com.ruoyi.classroom.domain.Chapter" id="ChapterResult">
         <result property="chapterId"    column="chapter_id"    />
         <result property="parentId"    column="parent_id"    />
         <result property="userId"    column="user_id"    />
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select chapter_id, parent_id, user_id, name, teach_mode, credit_hours, type, sort, status, create_by, create_time, update_by, update_time from tb_chapter
     </sql>
 
-    <select id="selectChapterList" parameterType="Chapter" resultMap="ChapterResult">
+    <select id="selectChapterList" parameterType="com.ruoyi.classroom.domain.Chapter" resultMap="ChapterResult">
         <include refid="selectChapterVo"/>
         <where>  
             <if test="parentId != null "> and parent_id = #{parentId}</if>
@@ -41,8 +41,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectChapterVo"/>
         where chapter_id = #{chapterId}
     </select>
-        
-    <insert id="insertChapter" parameterType="Chapter">
+
+    <select id="selectChapterByChapterIds" resultMap="ChapterResult">
+        <include refid="selectChapterVo"/>
+        where chapter_id in
+        <foreach item="chapterId" collection="list" open="(" separator="," close=")">
+            #{chapterId}
+        </foreach>
+    </select>
+    <select id="selectCreditHoursByCourseId" resultType="java.lang.Integer" parameterType="Long">
+        select credit_hours from tb_chapter where chapter_id = #{chapterId}
+    </select>
+
+    <insert id="insertChapter" parameterType="com.ruoyi.classroom.domain.Chapter" useGeneratedKeys="true" keyProperty="chapterId">
         insert into tb_chapter
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="chapterId != null">chapter_id,</if>
@@ -76,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateChapter" parameterType="Chapter">
+    <update id="updateChapter" parameterType="com.ruoyi.classroom.domain.Chapter">
         update tb_chapter
         <trim prefix="SET" suffixOverrides=",">
             <if test="parentId != null">parent_id = #{parentId},</if>

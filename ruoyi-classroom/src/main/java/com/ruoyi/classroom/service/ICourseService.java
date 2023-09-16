@@ -2,6 +2,7 @@ package com.ruoyi.classroom.service;
 
 import java.util.List;
 import com.ruoyi.classroom.domain.Course;
+import com.ruoyi.classroom.domain.vo.CourseContentVo;
 
 /**
  * 课程管理Service接口
@@ -58,4 +59,11 @@ public interface ICourseService
      * @return 结果
      */
     public int deleteCourseByCourseId(Long courseId);
+
+    /**
+     * 得到课程的相关信息
+     * @param courseId
+     * @return
+     */
+    CourseContentVo getCourseContentInfo(Long courseId);
 }

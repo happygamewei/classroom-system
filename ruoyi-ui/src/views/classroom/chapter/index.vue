@@ -62,7 +62,6 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="父目录id" prop="parentId" />
       <el-table-column label="章节/小节名称" align="center" prop="name" />
       <el-table-column label="授课模式" align="center" prop="teachMode" />
       <el-table-column label="学时数" align="center" prop="creditHours" />
@@ -99,20 +98,36 @@
     <!-- 添加或修改章节对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="父目录id" prop="parentId">
-          <treeselect v-model="form.parentId" :options="chapterOptions" :normalizer="normalizer" placeholder="请选择父目录id" />
+        <el-form-item label="课程" prop="CourseSmallVo">
+          <el-select v-model="form.courseId" placeholder="请选择课程" style="width: 250px">
+            <el-option
+              v-for="item in courseInfoList"
+              :key="item.courseId"
+              :label="item.name"
+              :value="item.courseId"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="创建者id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入创建者id" />
+        <el-form-item label="父目录" prop="parentId">
+          <treeselect v-model="form.parentId" :options="chapterOptions" :normalizer="normalizer" placeholder="请选择父目录" />
         </el-form-item>
-        <el-form-item label="章节/小节名称" prop="name">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入章节/小节名称" />
         </el-form-item>
         <el-form-item label="学时数" prop="creditHours">
           <el-input v-model="form.creditHours" placeholder="请输入学时数" />
         </el-form-item>
         <el-form-item label="顺序" prop="sort">
-          <el-input v-model="form.sort" placeholder="请输入顺序" />
+          <el-input-number v-model="form.sort" controls-position="right" :min="0" />
+        </el-form-item>
+        <el-form-item label="授课模式" prop="teachMode">
+          <el-radio-group v-model="form.teachMode">
+            <el-radio
+              v-for="dict in dict.type.class_teach_mode"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -124,17 +139,20 @@
 </template>
 
 <script>
-import { listChapter, getChapter, delChapter, addChapter, updateChapter } from "@/api/classroom/chapter";
+import {listChapter, getChapter, delChapter, addChapter, updateChapter, getCourseInfo} from "@/api/classroom/chapter";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "Chapter",
+  dicts: ['class_teach_mode'],
   components: {
     Treeselect
   },
   data() {
     return {
+      // 课程信息
+      courseInfoList: [],
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -229,7 +247,8 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
+        courseId: null
       };
       this.resetForm("form");
     },
@@ -244,6 +263,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd(row) {
+      this.selectCourseInfo()
       this.reset();
       this.getTreeselect();
       if (row != null && row.chapterId) {
@@ -280,7 +300,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.teachMode = this.form.teachMode.join(",");
+          // this.form.teachMode = this.form.teachMode.join(",");
           if (this.form.chapterId != null) {
             updateChapter(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -305,6 +325,14 @@ export default {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
+    },
+    // 查询课程
+    selectCourseInfo() {
+      getCourseInfo().then((res) => {
+        if(res.code === 200){
+          this.courseInfoList = res.data
+        }
+      })
     }
   }
 };

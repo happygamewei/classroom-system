@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.CourseMapper">
     
-    <resultMap type="Course" id="CourseResult">
+    <resultMap type="com.ruoyi.classroom.domain.Course" id="CourseResult">
         <result property="courseId"    column="course_id"    />
         <result property="name"    column="name"    />
         <result property="code"    column="code"    />
@@ -24,11 +24,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
+    <resultMap type="com.ruoyi.classroom.domain.vo.CourseSmallVo" id="CourseChapterResult">
+        <result property="courseId"    column="course_id"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
     <sql id="selectCourseVo">
         select course_id, name, code, teach_class, school_year, term, teach_mode, credit_hours, introduce, place, institutional, join_number, status, create_by, create_time, update_by, update_time from tb_course
     </sql>
 
-    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">
+    <select id="selectCourseList" parameterType="com.ruoyi.classroom.domain.Course" resultMap="CourseResult">
         <include refid="selectCourseVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
@@ -50,8 +55,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourseVo"/>
         where course_id = #{courseId}
     </select>
-        
-    <insert id="insertCourse" parameterType="Course">
+    <select id="selectCourseInChapter" resultMap="CourseChapterResult">
+        select course_id, name from tb_course
+    </select>
+    <select id="selectCreditHoursByCourseId" resultType="java.lang.Integer" parameterType="Long">
+        select credit_hours from tb_course where course_id = #{courseId}
+    </select>
+
+    <insert id="insertCourse" parameterType="com.ruoyi.classroom.domain.Course">
         insert into tb_course
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="courseId != null">course_id,</if>
@@ -93,7 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateCourse" parameterType="Course">
+    <update id="updateCourse" parameterType="com.ruoyi.classroom.domain.Course">
         update tb_course
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">name = #{name},</if>

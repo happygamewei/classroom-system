@@ -34,6 +34,11 @@ public class CourseController extends BaseController
     @Autowired
     private ICourseService courseService;
 
+    @GetMapping(value = "/courseContentById/{courseId}")
+    public AjaxResult getCourseContentInfo(@PathVariable("courseId") Long courseId){
+        return success(courseService.getCourseContentInfo(courseId));
+    }
+
     /**
      * 查询课程管理列表
      */
