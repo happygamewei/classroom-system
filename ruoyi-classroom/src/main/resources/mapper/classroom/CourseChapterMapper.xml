@@ -26,6 +26,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourseChapterVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectChaptersByCourserId" resultMap="CourseChapterResult" parameterType="Long">
+        <include refid="selectCourseChapterVo" />
+        where course_id = #{courseId}
+    </select>
+
     <select id="findChapterByCourseById" resultMap="CourseChapterResult">
         <include refid="selectCourseChapterVo"/>
         <if test="course_id!=null and chapter_id!=null">
