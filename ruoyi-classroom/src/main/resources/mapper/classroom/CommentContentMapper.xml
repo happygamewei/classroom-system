@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.CommentContentMapper">
-    
+
     <resultMap type="CommentContent" id="CommentContentResult">
         <result property="id"    column="id"    />
         <result property="commentId"    column="comment_id"    />
@@ -17,18 +17,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCommentContentList" parameterType="CommentContent" resultMap="CommentContentResult">
         <include refid="selectCommentContentVo"/>
-        <where>  
+        <where>
             <if test="commentId != null "> and comment_id = #{commentId}</if>
             <if test="contentId != null "> and content_id = #{contentId}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
         </where>
     </select>
-    
+
     <select id="selectCommentContentById" parameterType="Long" resultMap="CommentContentResult">
         <include refid="selectCommentContentVo"/>
         where id = #{id}
     </select>
-        
+    <select id="findContentCountByTopic" resultType="com.ruoyi.classroom.domain.CommentContent">
+        <include refid="selectCommentContentVo"/>
+        <where>
+            <if test="type!='' and content_id!=null"> type='4'and content_id=#{topicId}</if>
+        </where>
+    </select>
+
+
     <insert id="insertCommentContent" parameterType="CommentContent">
         insert into tb_comment_content
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -60,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteCommentContentByIds" parameterType="String">
-        delete from tb_comment_content where id in 
+        delete from tb_comment_content where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
