@@ -73,5 +73,5 @@ public interface IChapterService
      * @param courseId
      * @return
      */
-    List<Chapter> getChapterByCourseId(Long courseId);
+    List<ChapterVo> getChapterByCourseId(Long courseId);
 }

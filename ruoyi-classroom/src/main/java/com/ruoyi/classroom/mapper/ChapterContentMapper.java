@@ -58,4 +58,12 @@ public interface ChapterContentMapper
      * @return 结果
      */
     public int deleteChapterContentByIds(Long[] ids);
+
+    /**
+     * 根据章节id查询数据
+     * @param chapterId
+     * @return
+     */
+    List<ChapterContent> selectByChapterId(Long chapterId);
+
 }

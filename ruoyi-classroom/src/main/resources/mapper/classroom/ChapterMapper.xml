@@ -49,8 +49,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{chapterId}
         </foreach>
     </select>
+
     <select id="selectCreditHoursByCourseId" resultType="java.lang.Integer" parameterType="Long">
-        select credit_hours from tb_chapter where chapter_id = #{chapterId}
+        select credit_hours from tb_chapter where chapter_id = #{chapterId} AND parent_id = 0
     </select>
 
     <insert id="insertChapter" parameterType="com.ruoyi.classroom.domain.Chapter" useGeneratedKeys="true" keyProperty="chapterId">

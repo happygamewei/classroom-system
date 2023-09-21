@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -104,7 +106,7 @@ public class SysLoginService
      * 校验验证码
      * 
      * @param username 用户名
-     * @param code 验证码
+     * @param code 验证码loginUser = {LoginUser@14787}
      * @param uuid 唯一标识
      * @return 结果
      */
@@ -127,6 +129,17 @@ public class SysLoginService
                 throw new CaptchaException();
             }
         }
+    }
+
+    /**
+     * 得到验证码
+     * @param uuid
+     * @return
+     */
+    public String getCaptcha(String uuid){
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
+        String captcha = redisCache.getCacheObject(verifyKey);
+        return captcha;
     }
 
     /**

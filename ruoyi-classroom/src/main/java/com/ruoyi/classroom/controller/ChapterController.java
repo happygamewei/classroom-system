@@ -84,7 +84,7 @@ public class ChapterController extends BaseController
     /**
      * 新增章节
      */
-    @PreAuthorize("@ss.hasPermi('classroom:chapter:add')")
+//    @PreAuthorize("@ss.hasPermi('classroom:chapter:add')")
     @Log(title = "章节", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ChapterDto chapter)
