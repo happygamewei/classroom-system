@@ -65,4 +65,6 @@ public interface CommentContentMapper
      * @return
      */
     public List<CommentContent> findContentCountByTopic(Long topicId);
+
+    public  int deleteByCommentId (Long commentId);
 }

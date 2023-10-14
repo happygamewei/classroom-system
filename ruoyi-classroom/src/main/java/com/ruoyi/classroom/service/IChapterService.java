@@ -8,15 +8,15 @@ import com.ruoyi.classroom.domain.vo.CourseSmallVo;
 
 /**
  * 章节Service接口
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
-public interface IChapterService 
+public interface IChapterService
 {
     /**
      * 查询章节
-     * 
+     *
      * @param chapterId 章节主键
      * @return 章节
      */
@@ -24,7 +24,7 @@ public interface IChapterService
 
     /**
      * 查询章节列表
-     * 
+     *
      * @param chapter 章节
      * @return 章节集合
      */
@@ -32,7 +32,7 @@ public interface IChapterService
 
     /**
      * 新增章节
-     * 
+     *
      * @param chapter 章节
      * @return 结果
      */
@@ -40,7 +40,7 @@ public interface IChapterService
 
     /**
      * 修改章节
-     * 
+     *
      * @param chapter 章节
      * @return 结果
      */
@@ -48,7 +48,7 @@ public interface IChapterService
 
     /**
      * 批量删除章节
-     * 
+     *
      * @param chapterIds 需要删除的章节主键集合
      * @return 结果
      */
@@ -56,7 +56,7 @@ public interface IChapterService
 
     /**
      * 删除章节信息
-     * 
+     *
      * @param chapterId 章节主键
      * @return 结果
      */

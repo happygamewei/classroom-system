@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCommentContentVo"/>
         where id = #{id}
     </select>
-    <select id="findContentCountByTopic" resultType="com.ruoyi.classroom.domain.CommentContent">
+    <select id="findContentCountByTopic" resultMap="CommentContentResult">
         <include refid="selectCommentContentVo"/>
         <where>
             <if test="type!='' and content_id!=null"> type='4'and content_id=#{topicId}</if>
@@ -71,5 +71,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+    <delete id="deleteByCommentId">
+        delete from tb_comment_content where comment_id =#{commentId}
     </delete>
 </mapper>

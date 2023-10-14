@@ -13,6 +13,8 @@ import com.ruoyi.classroom.domain.vo.ContentVo;
 import com.ruoyi.classroom.domain.vo.CourseSmallVo;
 import com.ruoyi.classroom.mapper.*;
 import com.ruoyi.classroom.utils.ClassRoomConstants;
+import com.ruoyi.classroom.mapper.CourseChapterMapper;
+import com.ruoyi.classroom.mapper.CourseMapper;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.BeanUtils;
@@ -22,12 +24,12 @@ import com.ruoyi.classroom.service.IChapterService;
 
 /**
  * 章节Service业务层处理
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
 @Service
-public class ChapterServiceImpl implements IChapterService 
+public class ChapterServiceImpl implements IChapterService
 {
     @Autowired
     private ChapterMapper chapterMapper;
@@ -58,7 +60,7 @@ public class ChapterServiceImpl implements IChapterService
 
     /**
      * 查询章节
-     * 
+     *
      * @param chapterId 章节主键
      * @return 章节
      */
@@ -70,7 +72,7 @@ public class ChapterServiceImpl implements IChapterService
 
     /**
      * 查询章节列表
-     * 
+     *
      * @param chapter 章节
      * @return 章节
      */
@@ -82,7 +84,7 @@ public class ChapterServiceImpl implements IChapterService
 
     /**
      * 新增章节
-     * 
+     *
      * @param chapterDto 章节
      * @return 结果
      */
@@ -119,7 +121,7 @@ public class ChapterServiceImpl implements IChapterService
 
     /**
      * 修改章节
-     * 
+     *
      * @param chapter 章节
      * @return 结果
      */
@@ -132,7 +134,7 @@ public class ChapterServiceImpl implements IChapterService
 
     /**
      * 批量删除章节
-     * 
+     *
      * @param chapterIds 需要删除的章节主键
      * @return 结果
      */
@@ -144,7 +146,7 @@ public class ChapterServiceImpl implements IChapterService
 
     /**
      * 删除章节信息
-     * 
+     *
      * @param chapterId 章节主键
      * @return 结果
      */

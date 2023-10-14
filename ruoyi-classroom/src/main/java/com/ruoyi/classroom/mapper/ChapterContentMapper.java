@@ -5,15 +5,15 @@ import com.ruoyi.classroom.domain.ChapterContent;
 
 /**
  * 章节内容管理Mapper接口
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
-public interface ChapterContentMapper 
+public interface ChapterContentMapper
 {
     /**
      * 查询章节内容管理
-     * 
+     *
      * @param id 章节内容管理主键
      * @return 章节内容管理
      */
@@ -21,7 +21,7 @@ public interface ChapterContentMapper
 
     /**
      * 查询章节内容管理列表
-     * 
+     *
      * @param chapterContent 章节内容管理
      * @return 章节内容管理集合
      */
@@ -29,7 +29,7 @@ public interface ChapterContentMapper
 
     /**
      * 新增章节内容管理
-     * 
+     *
      * @param chapterContent 章节内容管理
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface ChapterContentMapper
 
     /**
      * 修改章节内容管理
-     * 
+     *
      * @param chapterContent 章节内容管理
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface ChapterContentMapper
 
     /**
      * 删除章节内容管理
-     * 
+     *
      * @param id 章节内容管理主键
      * @return 结果
      */
@@ -53,7 +53,7 @@ public interface ChapterContentMapper
 
     /**
      * 批量删除章节内容管理
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
@@ -65,5 +65,6 @@ public interface ChapterContentMapper
      * @return
      */
     List<ChapterContent> selectByChapterId(Long chapterId);
+
 
 }

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.UserTopicMapper">
-    
+
     <resultMap type="UserTopic" id="UserTopicResult">
         <result property="userTopicId"    column="user_topic_id"    />
         <result property="userId"    column="user_id"    />
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectUserTopicList" parameterType="UserTopic" resultMap="UserTopicResult">
         <include refid="selectUserTopicVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="topicId != null "> and topic_id = #{topicId}</if>
             <if test="isReadLabel != null  and isReadLabel != ''"> and isReadLabel = #{isReadLabel}</if>
@@ -31,12 +31,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectUserTopicByUserTopicId" parameterType="Long" resultMap="UserTopicResult">
         <include refid="selectUserTopicVo"/>
         where user_topic_id = #{userTopicId}
     </select>
-        
+    <select id="findByTopicId" resultMap="UserTopicResult">
+        <include refid="selectUserTopicVo"/>
+        where user_id=#{userId} and topic_id=#{topicId}
+    </select>
+    <select id="findUserByTopicId" resultType="java.lang.Long">
+        select user_id from tb_user_topic where topic_id=#{topicId}
+    </select>
+
+
     <insert id="insertUserTopic" parameterType="UserTopic">
         insert into tb_user_topic
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -80,13 +88,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where user_topic_id = #{userTopicId}
     </update>
+    <update id="updateIsLikeInt1">
+        update tb_user_topic set isLike ='0' where user_topic_id = #{userTopicId}
+    </update>
+    <update id="updateIsLikeInt2">
+        update tb_user_topic set isLike ='1' where user_topic_id = #{userTopicId}
+    </update>
+
+    <update id="updateIsReadLabelInt">
+        update tb_user_topic set isReadLabel ='1' where user_topic_id = #{userTopicId}
+    </update>
 
     <delete id="deleteUserTopicByUserTopicId" parameterType="Long">
         delete from tb_user_topic where user_topic_id = #{userTopicId}
     </delete>
 
     <delete id="deleteUserTopicByUserTopicIds" parameterType="String">
-        delete from tb_user_topic where user_topic_id in 
+        delete from tb_user_topic where user_topic_id in
         <foreach item="userTopicId" collection="array" open="(" separator="," close=")">
             #{userTopicId}
         </foreach>

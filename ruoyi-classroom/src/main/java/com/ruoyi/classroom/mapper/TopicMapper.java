@@ -33,7 +33,7 @@ public interface TopicMapper
      * @param topic 话题
      * @return 结果
      */
-    public int insertTopic(Topic topic);
+    public Long insertTopic(Topic topic);
 
     /**
      * 修改话题
@@ -59,6 +59,17 @@ public interface TopicMapper
      */
     public int deleteTopicByTopicIds(Long[] topicIds);
 
-    public Topic findTopicByChapterId(Long chapterId);
+    public List<Topic> findTopicByChapterId(Long chapterId);
+
+    public  int updateLikeCount(Long topicId);
+    public int updateCancleLikeCount(Long topicId);
+
+    /**
+     * 添加话题的参与人数
+     * @param topicId
+     * @return
+     */
+    public  int updateJoinNumberInt(Long topicId);
+
 
 }

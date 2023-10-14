@@ -5,15 +5,15 @@ import com.ruoyi.classroom.domain.CourseChapter;
 
 /**
  * 课程目录关系Mapper接口
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
-public interface CourseChapterMapper 
+public interface CourseChapterMapper
 {
     /**
      * 查询课程目录关系
-     * 
+     *
      * @param id 课程目录关系主键
      * @return 课程目录关系
      */
@@ -21,7 +21,7 @@ public interface CourseChapterMapper
 
     /**
      * 查询课程目录关系列表
-     * 
+     *
      * @param courseChapter 课程目录关系
      * @return 课程目录关系集合
      */
@@ -29,7 +29,7 @@ public interface CourseChapterMapper
 
     /**
      * 新增课程目录关系
-     * 
+     *
      * @param courseChapter 课程目录关系
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface CourseChapterMapper
 
     /**
      * 修改课程目录关系
-     * 
+     *
      * @param courseChapter 课程目录关系
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface CourseChapterMapper
 
     /**
      * 删除课程目录关系
-     * 
+     *
      * @param id 课程目录关系主键
      * @return 结果
      */
@@ -53,7 +53,7 @@ public interface CourseChapterMapper
 
     /**
      * 批量删除课程目录关系
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
@@ -73,4 +73,5 @@ public interface CourseChapterMapper
      * @return
      */
     List<CourseChapter> selectChaptersByCourserId(Long courseId);
+
 }

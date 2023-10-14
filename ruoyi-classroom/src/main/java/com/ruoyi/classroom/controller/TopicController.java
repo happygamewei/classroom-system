@@ -3,9 +3,14 @@ package com.ruoyi.classroom.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.classroom.domain.Chapter;
 import com.ruoyi.classroom.domain.Comment;
+import com.ruoyi.classroom.domain.vo.CommentVo;
+import com.ruoyi.common.annotation.Anonymous;
+import com.ruoyi.system.service.impl.SysDictDataServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,6 +40,8 @@ public class TopicController extends BaseController
 {
     @Autowired
     private ITopicService topicService;
+    @Autowired
+    private SysDictDataServiceImpl sysDictDataService;
 
     /**
      * 查询话题列表
@@ -65,9 +72,10 @@ public class TopicController extends BaseController
      * 获取话题详细信息
      */
     //@PreAuthorize("@ss.hasPermi('classroom:topic:query')")
-    @GetMapping(value = "/{topicId}")
+    @GetMapping("/{topicId}")
     public AjaxResult getInfo(@PathVariable("topicId") Long topicId)
     {
+
         return success(topicService.selectTopicByTopicId(topicId));
     }
 
@@ -76,10 +84,11 @@ public class TopicController extends BaseController
      */
     //@PreAuthorize("@ss.hasPermi('classroom:topic:add')")
     //@Log(title = "话题", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody Topic topic)
+    @PostMapping("/{userId}")
+    public void add(@PathVariable Long userId,@RequestBody Topic topic)
     {
-        return toAjax(topicService.insertTopic(topic));
+        System.out.println("话题："+topic);
+        topicService.insertTopic(topic,userId);
     }
 
     /**
@@ -103,17 +112,20 @@ public class TopicController extends BaseController
     {
         return toAjax(topicService.deleteTopicByTopicIds(topicIds));
     }
-
+     @DeleteMapping("/delete/{topicId}")
+     public AjaxResult deleteTopic(@PathVariable Long topicId){
+        return toAjax(topicService.deleteTopicByTopicId(topicId));
+     }
     /**
      * 根据课程id查询该课程的所有话题
      * @param courseId
      * @return
      */
 
-    @GetMapping("/allTopics/{courseId}")
-    public List<Topic> findChapterByCourseById(@PathVariable("courseId") Long courseId){
-        System.out.println("查询话题执行了");
-            return topicService.findChapterByCourseById(courseId);
+    @GetMapping("/list/{courseId}")
+    public AjaxResult findChapterByCourseById(@PathVariable("courseId") Long courseId){
+
+        return success(topicService.findChapterByCourseById(courseId));
     }
 
     /**
@@ -122,10 +134,8 @@ public class TopicController extends BaseController
      * @return
      */
     @GetMapping("/allTopicCount/{courseId}")
-    public int findChapterByCourseCountById(@PathVariable("courseId") Long courseId){
-        System.out.println("查询话题数量执行了");
-        System.out.println(topicService.findChapterByCourseById(courseId).size());
-        return topicService.findChapterByCourseById(courseId).size();
+    public AjaxResult findChapterByCourseCountById(@PathVariable("courseId") Long courseId){
+        return success(topicService.findChapterByCourseById(courseId).size());
     }
     /**
      * 返回话题的评论数量
@@ -134,24 +144,27 @@ public class TopicController extends BaseController
      */
 
 
-    @GetMapping("/commentCount/{topicsId}")
-    public int findCommentsCountByTopicsId(@PathVariable("topicsId") Long topicId){
+    @GetMapping("/commentCount/{topicId}")
+    public AjaxResult findCommentsCountByTopicsId(@PathVariable("topicId") Long topicId){
 
-        return topicService.findContentCountByTopic(topicId);
+        return success(topicService.findContentCountByTopic(topicId));
     }
 
     /**
-     * 返回该话题的所有评论的内容
+     * 返回该话题的没有父节点评论的内容
      * @param topicId
      * @return
      */
 
 
-    @GetMapping("/commentContent/{topicid}")
-    public List<Comment> findCommentsByTopic(@PathVariable("topicid") Long topicId){
-        return topicService.findContentsByTopic(topicId);
+    @GetMapping("/getAllComments/{topicid}")
+    public AjaxResult findCommentsByTopic(@PathVariable("topicid") Long topicId){
+        return success(topicService.processComments(topicId));
     }
-
+    @GetMapping("/replyComment/{parentId}")
+   public  AjaxResult replyComment(@PathVariable Long parentId){
+          return success(topicService.replyComment(parentId));
+   }
     /**
      * 返回未参与的数量
      * @param courseId
@@ -165,4 +178,105 @@ public class TopicController extends BaseController
      return topicService.noParticipation(courseId,topicId);
     }
 
+    /**
+     * 添加评论
+     * @param userId
+     * @param topicId
+     * @param comment
+     */
+    @PostMapping("/addTopicComment/{userId}/{topicId}/{comment}")
+    public void addTopicComment(@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment){
+        Long parentId=null;
+        topicService.addTopicComment(userId,topicId,comment,parentId);
+
+    }
+
+    /**
+     * 添加回复的评论
+     * @param userId
+     * @param topicId
+     * @param comment
+     * @param parentId
+     */
+    @PostMapping("/addTopicReplyComment/{userId}/{topicId}/{comment}/{parentId}")
+    public void addTopicReplyComment(@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment,@PathVariable("parentId")Long parentId){
+
+        topicService.addTopicComment(userId,topicId,comment,parentId);
+
+    }
+    /**
+     * 点赞
+     * @param userId
+     * @param topicId
+     */
+      @PostMapping("/likeCount/{userId}/{topicId}")
+    public void addLikeCount(@PathVariable("userId")Long userId,@PathVariable("topicId") Long topicId){
+                 topicService.likeClick(userId,topicId);
+    }
+
+    /**
+     * 判断用户是否已经阅读了话题
+     * @param userId
+     * @param topicId
+     */
+    @PostMapping("/isJoinTopic/{userId}/{topicId}")
+    public void isJoinTopic(@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId){
+    topicService.isJoinTopic(userId,topicId);
+    }
+
+    /**
+     * 获取课程的所有章节
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/getAllChapter/{courseId}")
+    public AjaxResult getAllChapterByCourseId(@PathVariable Long courseId){
+        System.out.println("所有章节信息："+topicService.processChapters(courseId));
+           return  success(topicService.processChapters(courseId));
+    }
+
+    /**
+     * 查找一个字典类型的所有字典信息
+     * @return
+     */@GetMapping("/getDictionaryByType/{type}")
+
+    public AjaxResult dictName(@PathVariable  String type){
+
+            return success(sysDictDataService.allDictName(type));
+
+    }
+
+    /**
+     * 获取发表该话题的用户信息
+     * @param topicId
+     * @return
+     */
+    @GetMapping("/findUserByTopicId/{topicId}")
+    public AjaxResult findUserByTopicId(@PathVariable Long topicId){
+          return  success(topicService.findUserByTopicId(topicId));
+    }
+
+    @PostMapping("/deleteComment")
+    public AjaxResult deleteComment(@RequestBody CommentVo commentVo){
+        System.out.println("评论------："+commentVo);
+        return success( topicService.deleteComment(commentVo)) ;
+    }
+    @GetMapping("/commentLikes/{userId}/{commentId}")
+    public void CommentLikes(@PathVariable Long userId, @PathVariable Long commentId){
+       topicService.CommentLikes(userId,commentId);
+    }
+    @GetMapping("/likeState/{userId}/{commentId}")
+    public AjaxResult likeState(@PathVariable Long userId,@PathVariable Long commentId){
+        return success(topicService.likeState(userId,commentId));
+    }
+
+    /**
+     * 获取所有章节信息
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/byCourseId/{courseId}")
+    public AjaxResult getAllChapterById(@PathVariable Long courseId){
+                return  success(topicService.getChapterByCourseId(courseId));
+    }
 }

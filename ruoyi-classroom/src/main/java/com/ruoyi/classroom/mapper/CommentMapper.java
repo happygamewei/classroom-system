@@ -5,15 +5,15 @@ import com.ruoyi.classroom.domain.Comment;
 
 /**
  * 评论管理Mapper接口
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
-public interface CommentMapper 
+public interface CommentMapper
 {
     /**
      * 查询评论管理
-     * 
+     *
      * @param commentId 评论管理主键
      * @return 评论管理
      */
@@ -21,7 +21,7 @@ public interface CommentMapper
 
     /**
      * 查询评论管理列表
-     * 
+     *
      * @param comment 评论管理
      * @return 评论管理集合
      */
@@ -29,7 +29,7 @@ public interface CommentMapper
 
     /**
      * 新增评论管理
-     * 
+     *
      * @param comment 评论管理
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface CommentMapper
 
     /**
      * 修改评论管理
-     * 
+     *
      * @param comment 评论管理
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface CommentMapper
 
     /**
      * 删除评论管理
-     * 
+     *
      * @param commentId 评论管理主键
      * @return 结果
      */
@@ -53,9 +53,14 @@ public interface CommentMapper
 
     /**
      * 批量删除评论管理
-     * 
+     *
      * @param commentIds 需要删除的数据主键集合
      * @return 结果
      */
     public int deleteCommentByCommentIds(Long[] commentIds);
+    public List<Comment> findCommentsByCommentIds(List<Long> commentIds);
+
+    public List<Comment> replyComment(Long parentId);
+    public int updateLikesNumber(Long commentId);
+    public int reduceLikesNumber(Long commentId);
 }

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.CommentMapper">
-    
+
     <resultMap type="Comment" id="CommentResult">
         <result property="commentId"    column="comment_id"    />
         <result property="parentId"    column="parent_id"    />
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
         <include refid="selectCommentVo"/>
-        <where>  
+        <where>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
             <if test="typeId != null "> and type_id = #{typeId}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
@@ -35,13 +35,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectCommentByCommentId" parameterType="Long" resultMap="CommentResult">
         <include refid="selectCommentVo"/>
         where comment_id = #{commentId}
     </select>
-        
-    <insert id="insertComment" parameterType="Comment">
+    <select id="replyComment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+            where parent_id = #{parentId}
+    </select>
+    <select id="findCommentsByCommentIds" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where comment_id in
+            <foreach item="commentId" collection="list" open="(" separator="," close=")">
+                #{commentId}
+            </foreach>
+    </select>
+
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="commentId">
         insert into tb_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="commentId != null">comment_id,</if>
@@ -90,13 +101,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where comment_id = #{commentId}
     </update>
+    <update id="updateLikesNumber">
+        update tb_comment set likes_number = likes_number+1 where comment_id=#{commentId}
+    </update>
+    <update id="reduceLikesNumber">
+        update tb_comment set likes_number = likes_number-1 where comment_id=#{commentId}
+    </update>
 
     <delete id="deleteCommentByCommentId" parameterType="Long">
         delete from tb_comment where comment_id = #{commentId}
     </delete>
 
     <delete id="deleteCommentByCommentIds" parameterType="String">
-        delete from tb_comment where comment_id in 
+        delete from tb_comment where comment_id in
         <foreach item="commentId" collection="array" open="(" separator="," close=")">
             #{commentId}
         </foreach>

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.LikesMapper">
-    
+
     <resultMap type="Likes" id="LikesResult">
         <result property="id"    column="id"    />
         <result property="commentId"    column="comment_id"    />
@@ -17,18 +17,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectLikesList" parameterType="Likes" resultMap="LikesResult">
         <include refid="selectLikesVo"/>
-        <where>  
+        <where>
             <if test="commentId != null "> and comment_id = #{commentId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
         </where>
     </select>
-    
+
     <select id="selectLikesById" parameterType="Long" resultMap="LikesResult">
         <include refid="selectLikesVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectType" resultType="java.lang.String">
+        select  type  from tb_likes where user_id=#{userId} and comment_id=#{commentId}
+    </select>
+
+
     <insert id="insertLikes" parameterType="Likes">
         insert into tb_likes
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -54,13 +58,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where id = #{id}
     </update>
+    <update id="updateType">
+        update tb_likes set type="1" where user_id=#{userId} and comment_id=#{commentId}
+    </update>
+    <update id="updateType2">
+        update tb_likes set type="0" where user_id=#{userId} and comment_id=#{commentId}
+    </update>
 
     <delete id="deleteLikesById" parameterType="Long">
         delete from tb_likes where id = #{id}
     </delete>
 
     <delete id="deleteLikesByIds" parameterType="String">
-        delete from tb_likes where id in 
+        delete from tb_likes where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -25,7 +25,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
  * 章节Controller
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
@@ -38,6 +38,7 @@ public class ChapterController extends BaseController
 
     @GetMapping("/byCourseId/{courseId}")
     public AjaxResult getChapterByCourseId(@PathVariable("courseId") Long courseId){
+        System.out.println("获取树的章节信息："+chapterService.getChapterByCourseId(courseId));
         return success(chapterService.getChapterByCourseId(courseId));
     }
 
@@ -55,6 +56,7 @@ public class ChapterController extends BaseController
     public AjaxResult list(Chapter chapter)
     {
         List<Chapter> list = chapterService.selectChapterList(chapter);
+        System.out.println("查询章节列表："+list);
         return success(list);
     }
 

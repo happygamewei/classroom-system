@@ -56,10 +56,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     <select id="findTopicByChapterId" resultMap="TopicResult">
         <include refid="selectTopicVo"/>
-            <if test="chapter_id!=null">
-                where chapter_id=#{chapterId}
-            </if>
-
+        <if test="chapter_id!=null">
+            where chapter_id=#{chapterId}
+        </if>
     </select>
 
 
@@ -131,6 +130,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where topic_id = #{topicId}
     </update>
+    <update id="updateLikeCount">
+        update tb_topic set like_count=like_count+1 where topic_id=#{topicId}
+    </update>
+    <update id="updateCancleLikeCount">
+        update tb_topic set like_count=like_count-1 where topic_id=#{topicId}
+    </update>
+    <update id="updateJoinNumberInt">
+        update tb_topic set join_number=join_number+1 where topic_id=#{topicId}
+    </update>
+
 
     <delete id="deleteTopicByTopicId" parameterType="Long">
         delete from tb_topic where topic_id = #{topicId}
