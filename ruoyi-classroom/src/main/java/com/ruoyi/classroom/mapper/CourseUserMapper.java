@@ -2,6 +2,7 @@ package com.ruoyi.classroom.mapper;
 
 import java.util.List;
 import com.ruoyi.classroom.domain.CourseUser;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 课程用户关系Mapper接口
@@ -60,4 +61,18 @@ public interface CourseUserMapper
     public int deleteCourseUserByIds(Long[] ids);
 
     public List<CourseUser> findUserCountByCourse(Long courseId);
+
+    /**
+     * 根据用户id查询用户教的和学的课程
+     * @param
+     * @return
+     */
+    List<CourseUser> selectByUserId(@Param("user_id") Long userId, @Param("type") String type);
+
+    /**
+     * 根据用户id查询课程
+     * @param userId
+     * @return
+     */
+    List<CourseUser> selectCourseUserByUserId(Long userId);
 }

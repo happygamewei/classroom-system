@@ -29,4 +29,19 @@ public class ClassRoomConstants {
      * 章节-话题内容
      */
     public static final String TOPIC_CONTENT = "5";
+
+    /**
+     * 用户教的
+     */
+    public static final String COURSE_TEACH = "1";
+
+    /**
+     * 用户协助的
+     */
+    public static final String COURSE_ASSIST = "2";
+
+    /**
+     * 用户学的
+     */
+    public static final String COURSE_STUDY = "3";
 }

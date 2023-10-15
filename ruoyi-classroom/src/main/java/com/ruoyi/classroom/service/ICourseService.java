@@ -1,8 +1,11 @@
 package com.ruoyi.classroom.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.classroom.domain.Course;
 import com.ruoyi.classroom.domain.vo.CourseContentVo;
+import com.ruoyi.classroom.domain.vo.CourseVo;
 
 /**
  * 课程管理Service接口
@@ -66,4 +69,46 @@ public interface ICourseService
      * @return
      */
     CourseContentVo getCourseContentInfo(Long courseId);
+
+    /**
+     * 得到用户教的
+     * @param userId
+     * @return
+     */
+    Map<String, List<Course>> getUserTeachCourse(Long userId, String type);
+
+    /**
+     * 加入课程
+     * @param code
+     * @return
+     */
+    int joinCourse(String code);
+
+    /**
+     * 根据用户查询课程
+     * @param userId
+     * @return
+     */
+    List<CourseVo> listByUserId(Long userId);
+
+    /**
+     * 重置课程码
+     * @param courseId
+     * @return
+     */
+    int renewCourseCode(Long courseId);
+
+    /**
+     * 结课
+     * @param courseId
+     * @return
+     */
+    int overCourse(Long courseId);
+
+    /**
+     * 取消结课
+     * @param courseId
+     * @return
+     */
+    int openCourse(Long courseId);
 }

@@ -3,6 +3,7 @@ package com.ruoyi.classroom.mapper;
 import java.util.List;
 import com.ruoyi.classroom.domain.Course;
 import com.ruoyi.classroom.domain.vo.CourseSmallVo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 课程管理Mapper接口
@@ -72,4 +73,46 @@ public interface CourseMapper
      * @return
      */
     Integer selectCreditHoursByCourseId(Long courseId);
+
+    /**
+     * 根据课程码查询课程id
+     * @param code
+     * @return
+     */
+    Long selectCourseIdByCode(String code);
+
+    /**
+     * 更新人数
+     * @param courseId
+     */
+    void updateJoinNumber(Long courseId);
+
+    /**
+     * 重置课程码
+     * @param courseId
+     * @param newCode
+     * @return
+     */
+    int renewCourseCode(@Param("courseId") Long courseId,@Param("newCode") String newCode);
+
+    /**
+     * 根据课程码查询课程
+     * @param code
+     * @return
+     */
+    Course selectCourseByCode(String code);
+
+    /**
+     * 结课
+     * @param courseId
+     * @return
+     */
+    int overCourse(Long courseId);
+
+    /**
+     * 取消结课
+     * @param courseId
+     * @return
+     */
+    int openCourse(Long courseId);
 }

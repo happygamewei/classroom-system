@@ -91,6 +91,21 @@ public class ChapterServiceImpl implements IChapterService
     @Override
     public int insertChapter(ChapterDto chapterDto)
     {
+        //检测学时数是否已经超过了课程总的
+        Long creditHours = chapterDto.getCreditHours();
+        Long courseId = chapterDto.getCourseId();
+        Integer allCredit = courseMapper.selectCreditHoursByCourseId(courseId);
+        List<CourseChapter> courseChapters = courseChapterMapper.selectChaptersByCourserId(courseId);
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        courseChapters.forEach(courseChapter -> {
+            Integer allocatedCredit = chapterMapper.selectCreditHoursByCourseId(courseChapter.getCourseId());
+            atomicInteger.addAndGet(allocatedCredit);
+        });
+        if(creditHours + atomicInteger.get() > allCredit){
+            throw new RuntimeException("所添加的学时数已经超过了课程的学时数");
+        }
+
+
         //将chapterDto的内容copy到chapter中
         Chapter chapter = new Chapter();
         BeanUtils.copyProperties(chapterDto, chapter);
@@ -109,7 +124,6 @@ public class ChapterServiceImpl implements IChapterService
         int insertChapter = chapterMapper.insertChapter(chapter);
 
         //设置课程和章节关系
-        Long courseId = chapterDto.getCourseId();
         CourseChapter courseChapter = new CourseChapter();
         courseChapter.setCourseId(courseId);
 
@@ -183,13 +197,13 @@ public class ChapterServiceImpl implements IChapterService
 
         // 转换成chapterVoList
         List<ChapterVo> chapterVoList = new ArrayList<>();
-        chapterList.stream().forEach(chapter -> {
+        chapterList.forEach(chapter -> {
             ChapterVo chapterVo = new ChapterVo();
             BeanUtils.copyProperties(chapter, chapterVo);
             chapterVoList.add(chapterVo);
         });
 
-        // 将子目录放在父目录下
+        //将子目录放在父目录下
         // 将chapterList转换为Map，其中键为parentId，值为具有相同parentId的Chapter对象列表
         Map<Long, List<ChapterVo>> chapterMap = chapterVoList.stream().filter(chapter -> chapter.getParentId() != 0)
                 .collect(Collectors.groupingBy(Chapter::getParentId));
@@ -231,9 +245,7 @@ public class ChapterServiceImpl implements IChapterService
             });
 
             if(chapterContents.size() > 0){
-                System.out.println("setActiveNumber========="+chapterContents.size());
                 chapterVo.setActiveNumber(chapterContents.size());
-                System.out.println("getActiveNumber========="+chapterVo.getActiveNumber());
                 chapterVo.setContent(chapterContents);
                 if(chapterVo.getParentId() != 0){
                     chapterVo.setChildren(contentVoList);
@@ -244,16 +256,6 @@ public class ChapterServiceImpl implements IChapterService
             List<ChapterVo> children = chapterMap.get(chapterId);
             if(children != null){
                 chapterVo.setChildren(children);
-
-                // 累加得到章节的活动数
-                Integer activeNumber = chapterVo.getActiveNumber();
-                AtomicInteger activeN = new AtomicInteger(0);
-                children.stream().forEach(item -> {
-                    System.out.println("item============="+item.getActiveNumber());
-                    activeN.addAndGet(item.getActiveNumber());
-                });
-                System.out.println("==========================="+activeNumber+ "-----" + activeN.get());
-                chapterVo.setActiveNumber(activeNumber + activeN.get());
             }
         });
 
@@ -261,6 +263,19 @@ public class ChapterServiceImpl implements IChapterService
         List<ChapterVo> collect = chapterVoList.stream()
                 .filter(chapterVo -> chapterVo.getParentId() == 0)
                 .collect(Collectors.toList());
+
+        // 累加得到章节的活动数
+        collect.stream().forEach(chapterVo -> {
+            Integer activeNumber = chapterVo.getActiveNumber();
+            AtomicInteger activeN = new AtomicInteger(0);
+            List<ChapterVo> children = (List<ChapterVo>) chapterVo.getChildren();
+            if(children.size() > 0){
+                children.stream().forEach(item -> {
+                    activeN.addAndGet(item.getActiveNumber());
+                });
+            }
+            chapterVo.setActiveNumber(activeNumber + activeN.get());
+        });
 
         return collect;
     }

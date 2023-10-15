@@ -2,16 +2,11 @@ package com.ruoyi.classroom.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.classroom.domain.vo.CourseVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -34,9 +29,83 @@ public class CourseController extends BaseController
     @Autowired
     private ICourseService courseService;
 
+    /**
+     * 结课
+     * @param courseId
+     * @return
+     */
+    @PutMapping("/overCourse/{courseId}")
+    public AjaxResult overCourse(@PathVariable("courseId") Long courseId){
+        return toAjax(courseService.overCourse(courseId));
+    }
+
+    /**
+     * 取消结课
+     * @param courseId
+     * @return
+     */
+    @PutMapping("/openCourse/{courseId}")
+    public AjaxResult openCourse(@PathVariable("courseId") Long courseId){
+        return toAjax(courseService.openCourse(courseId));
+    }
+
+    /**
+     * 重置课程码
+     * @param courseId
+     * @return
+     */
+    @PutMapping("/renew/{courseId}")
+    public AjaxResult renewCourseCode(@PathVariable("courseId") Long courseId){
+        return toAjax(courseService.renewCourseCode(courseId));
+    }
+
+    /**
+     * 加入课程
+     * @param code
+     * @return
+     */
+    @GetMapping("/code/{code}")
+    public AjaxResult joinCourse(@PathVariable("code") String code){
+        int joinCourse = courseService.joinCourse(code);
+        if(joinCourse == -1){
+            return error("没有该课程");
+        }
+        if(joinCourse == -2){
+            return error("该课程已经结课");
+        }
+        return success();
+    }
+
+    /**
+     * 查询用户教的还是学的
+     * @param userId
+     * @param type
+     * @return
+     */
+    @GetMapping("/byUserId")
+    public AjaxResult getUserTeachCourse(@RequestParam("userId") Long userId, @RequestParam("type") String type){
+        return success(courseService.getUserTeachCourse(userId, type));
+    }
+
+    /**
+     * 得到课程的相关信息
+     * @param courseId
+     * @return
+     */
     @GetMapping(value = "/courseContentById/{courseId}")
     public AjaxResult getCourseContentInfo(@PathVariable("courseId") Long courseId){
         return success(courseService.getCourseContentInfo(courseId));
+    }
+
+    /**
+     * 根据用户查询课程管理列表
+     */
+    @PreAuthorize("@ss.hasPermi('classroom:course:list')")
+    @GetMapping("/list/{userId}")
+    public TableDataInfo listByUserId(@PathVariable("userId") Long userId)
+    {
+        List<CourseVo> list = courseService.listByUserId(userId);
+        return getDataTable(list);
     }
 
     /**
@@ -64,6 +133,11 @@ public class CourseController extends BaseController
         util.exportExcel(response, list, "课程管理数据");
     }
 
+    /**
+     * 得到一个课程
+     * @param courseId
+     * @return
+     */
     @GetMapping(value = "/byId/{courseId}")
     public AjaxResult getInfoById(@PathVariable("courseId") Long courseId){
         return success(courseService.selectCourseByCourseId(courseId));
