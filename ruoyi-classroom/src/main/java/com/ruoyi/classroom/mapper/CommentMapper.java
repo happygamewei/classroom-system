@@ -58,9 +58,7 @@ public interface CommentMapper
      * @return 结果
      */
     public int deleteCommentByCommentIds(Long[] commentIds);
-    public List<Comment> findCommentsByCommentIds(List<Long> commentIds);
 
-    public List<Comment> replyComment(Long parentId);
-    public int updateLikesNumber(Long commentId);
-    public int reduceLikesNumber(Long commentId);
+    List<Comment> findCommentsByCommentIds(List<Long> commentIds);
+    public  Long getLastId();
 }

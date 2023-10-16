@@ -23,7 +23,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = #{type}</if>
         </where>
     </select>
-
+    <select id="getCommentListTotal" resultType="Long">
+        SELECT
+            COUNT(*)
+        FROM
+            tb_comment_content
+        WHERE
+            type = '3' and content_id=#{noticeId}
+    </select>
     <select id="selectCommentContentById" parameterType="Long" resultMap="CommentContentResult">
         <include refid="selectCommentContentVo"/>
         where id = #{id}
@@ -32,6 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCommentContentVo"/>
         <where>
             <if test="type!='' and content_id!=null"> type='4'and content_id=#{topicId}</if>
+        </where>
+    </select>
+
+    <select id="findContentCountByNotice" parameterType="CommentContent" resultMap="CommentContentResult">
+        <include refid="selectCommentContentVo"/>
+        <where>
+
+            <if test="type != null  and type != ''"> and type = '3' and content_id=#{noticeId}</if>
         </where>
     </select>
 
@@ -63,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteCommentContentById" parameterType="Long">
-        delete from tb_comment_content where id = #{id}
+        delete from tb_comment_content where comment_id = #{commentId} and type = '3'
     </delete>
 
     <delete id="deleteCommentContentByIds" parameterType="String">

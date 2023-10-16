@@ -2,16 +2,12 @@ package com.ruoyi.classroom.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.classroom.domain.vo.CommentVo;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -22,7 +18,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
  * 评论管理Controller
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
@@ -36,14 +32,17 @@ public class CommentController extends BaseController
     /**
      * 查询评论管理列表
      */
-    @PreAuthorize("@ss.hasPermi('classroom:comment:list')")
     @GetMapping("/list")
     public AjaxResult list(Comment comment)
     {
         List<Comment> list = commentService.selectCommentList(comment);
         return success(list);
     }
-
+    @GetMapping("/totalcount/{noticeId}")
+    public AjaxResult totalcount(@PathVariable("noticeId") Long noticeId)
+    {
+        return success(commentService.getCommentListTotal(noticeId));
+    }
     /**
      * 导出评论管理列表
      */
@@ -70,12 +69,11 @@ public class CommentController extends BaseController
     /**
      * 新增评论管理
      */
-    @PreAuthorize("@ss.hasPermi('classroom:comment:add')")
-    @Log(title = "评论管理", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody Comment comment)
+    @PostMapping()
+    public AjaxResult add(@RequestBody Comment comment,@RequestParam("id") Long id)
     {
-        return toAjax(commentService.insertComment(comment));
+        System.out.println("=======================>"+comment+id);
+        return toAjax(commentService.insertComment(comment,id));
     }
 
     /**
@@ -92,11 +90,21 @@ public class CommentController extends BaseController
     /**
      * 删除评论管理
      */
-    @PreAuthorize("@ss.hasPermi('classroom:comment:remove')")
-    @Log(title = "评论管理", businessType = BusinessType.DELETE)
+
 	@DeleteMapping("/{commentIds}")
     public AjaxResult remove(@PathVariable Long[] commentIds)
     {
         return toAjax(commentService.deleteCommentByCommentIds(commentIds));
     }
+    @DeleteMapping("delete/{commentId}")
+    public AjaxResult deleteComment(@PathVariable Long commentId)
+    {
+        return toAjax(commentService.deleteCommentByCommentId(commentId));
+    }
+    @DeleteMapping("/delete")
+    public AjaxResult removeComment(@RequestBody CommentVo comment)
+    {
+        return toAjax(commentService.removeComment(comment));
+    }
+
 }

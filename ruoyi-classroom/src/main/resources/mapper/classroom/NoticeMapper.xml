@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.NoticeMapper">
-    
+
     <resultMap type="Notice" id="NoticeResult">
         <result property="noticeId"    column="notice_id"    />
         <result property="title"    column="title"    />
@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectNoticeList" parameterType="Notice" resultMap="NoticeResult">
         <include refid="selectNoticeVo"/>
-        <where>  
+        <where>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="typeLabel != null  and typeLabel != ''"> and type_label = #{typeLabel}</if>
@@ -44,13 +44,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="pictureLocation != null  and pictureLocation != ''"> and picture_location = #{pictureLocation}</if>
         </where>
     </select>
-    
+
     <select id="selectNoticeByNoticeId" parameterType="Long" resultMap="NoticeResult">
         <include refid="selectNoticeVo"/>
         where notice_id = #{noticeId}
     </select>
-        
-    <insert id="insertNotice" parameterType="Notice">
+
+    <insert id="insertNotice" parameterType="Notice"  useGeneratedKeys="true" keyProperty="noticeId">
         insert into tb_notice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="noticeId != null">notice_id,</if>
@@ -90,6 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="documentLocation != null">#{documentLocation},</if>
             <if test="pictureLocation != null">#{pictureLocation},</if>
          </trim>
+
     </insert>
 
     <update id="updateNotice" parameterType="Notice">
@@ -120,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteNoticeByNoticeIds" parameterType="String">
-        delete from tb_notice where notice_id in 
+        delete from tb_notice where notice_id in
         <foreach item="noticeId" collection="array" open="(" separator="," close=")">
             #{noticeId}
         </foreach>

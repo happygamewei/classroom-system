@@ -2,16 +2,12 @@ package com.ruoyi.classroom.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.classroom.domain.Comment;
+import org.quartz.SchedulerException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -23,7 +19,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 公告Controller
- * 
+ *
  * @author Qiao
  * @date 2023-09-08
  */
@@ -37,14 +33,18 @@ public class NoticeController extends BaseController
     /**
      * 查询公告列表
      */
-    @PreAuthorize("@ss.hasPermi('classroom:notice:list')")
+
     @GetMapping("/list")
     public TableDataInfo list(Notice notice)
     {
-        startPage();
+         startPage();
         List<Notice> list = noticeService.selectNoticeList(notice);
         return getDataTable(list);
     }
+//    @GetMapping("/byId/{noticeId}")
+//    public AjaxResult getNoticeByCourseId(@PathVariable("noticeId") Long noticeId){
+//        return success(noticeService.getNoticeById(noticeId));
+//    }
 
     /**
      * 导出公告列表
@@ -62,8 +62,8 @@ public class NoticeController extends BaseController
     /**
      * 获取公告详细信息
      */
-    @PreAuthorize("@ss.hasPermi('classroom:notice:query')")
-    @GetMapping(value = "/{noticeId}")
+
+    @GetMapping(value = "byId/{noticeId}")
     public AjaxResult getInfo(@PathVariable("noticeId") Long noticeId)
     {
         return success(noticeService.selectNoticeByNoticeId(noticeId));
@@ -72,11 +72,13 @@ public class NoticeController extends BaseController
     /**
      * 新增公告
      */
-    @PreAuthorize("@ss.hasPermi('classroom:notice:add')")
-    @Log(title = "公告", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody Notice notice)
-    {
+    @CrossOrigin
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody Notice notice) throws SchedulerException {
+        if (notice.getPublishDate()!=null){
+            return toAjax(noticeService.TimingIssue(notice));
+        }
+        System.out.println("----------"+notice);
         return toAjax(noticeService.insertNotice(notice));
     }
 
@@ -94,11 +96,20 @@ public class NoticeController extends BaseController
     /**
      * 删除公告
      */
-    @PreAuthorize("@ss.hasPermi('classroom:notice:remove')")
-    @Log(title = "公告", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{noticeIds}")
-    public AjaxResult remove(@PathVariable Long[] noticeIds)
+	@DeleteMapping("/delete/{noticeId}")
+    public AjaxResult remove(@PathVariable("noticeId") Long noticeId)
     {
-        return toAjax(noticeService.deleteNoticeByNoticeIds(noticeIds));
+        return toAjax(noticeService.deleteNoticeByNoticeId(noticeId));
     }
+
+    @GetMapping("/commentInNotice/{noticeId}")
+    public AjaxResult listInNotice(@PathVariable("noticeId") Long noticeId)
+    {
+        return success(noticeService.processComments(noticeId));
+    }
+
+
+
+
+
 }
