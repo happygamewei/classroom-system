@@ -40,19 +40,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCommentVo"/>
         where comment_id = #{commentId}
     </select>
-    <select id="replyComment" resultMap="CommentResult">
-        <include refid="selectCommentVo"/>
-            where parent_id = #{parentId}
+    <!--     todo -->
+    <select id="findCommentsByCommentIds" parameterType="java.util.List" resultMap="CommentResult">
+        select * from tb_comment where comment_id in
+        <foreach item="commentId" collection="list" open="(" separator="," close=")"> #{commentId} </foreach>
     </select>
-    <select id="findCommentsByCommentIds" resultMap="CommentResult">
-        <include refid="selectCommentVo"/>
-        where comment_id in
-            <foreach item="commentId" collection="list" open="(" separator="," close=")">
-                #{commentId}
-            </foreach>
-    </select>
-
-    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="commentId">
+    <select id="getLastId" resultType="long"> SELECT LAST_INSERT_ID(); </select>
+    <insert id="insertComment" parameterType="Comment">
         insert into tb_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="commentId != null">comment_id,</if>
@@ -100,12 +94,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where comment_id = #{commentId}
-    </update>
-    <update id="updateLikesNumber">
-        update tb_comment set likes_number = likes_number+1 where comment_id=#{commentId}
-    </update>
-    <update id="reduceLikesNumber">
-        update tb_comment set likes_number = likes_number-1 where comment_id=#{commentId}
     </update>
 
     <delete id="deleteCommentByCommentId" parameterType="Long">

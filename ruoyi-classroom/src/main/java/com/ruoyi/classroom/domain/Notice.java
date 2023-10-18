@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 公告对象 tb_notice
- * 
+ *
  * @author Qiao
  * @date 2023-09-08
  */
@@ -45,8 +45,8 @@ public class Notice extends BaseEntity
     private Long chapterId;
 
     /** 发布时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+
+    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date publishDate;
 
     /** 已读数量 */
@@ -69,120 +69,120 @@ public class Notice extends BaseEntity
     @Excel(name = "图片附件")
     private String pictureLocation;
 
-    public void setNoticeId(Long noticeId) 
+    public void setNoticeId(Long noticeId)
     {
         this.noticeId = noticeId;
     }
 
-    public Long getNoticeId() 
+    public Long getNoticeId()
     {
         return noticeId;
     }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }
 
-    public String getTitle() 
+    public String getTitle()
     {
         return title;
     }
-    public void setContent(String content) 
+    public void setContent(String content)
     {
         this.content = content;
     }
 
-    public String getContent() 
+    public String getContent()
     {
         return content;
     }
-    public void setTypeLabel(String typeLabel) 
+    public void setTypeLabel(String typeLabel)
     {
         this.typeLabel = typeLabel;
     }
 
-    public String getTypeLabel() 
+    public String getTypeLabel()
     {
         return typeLabel;
     }
-    public void setShareProtocol(String shareProtocol) 
+    public void setShareProtocol(String shareProtocol)
     {
         this.shareProtocol = shareProtocol;
     }
 
-    public String getShareProtocol() 
+    public String getShareProtocol()
     {
         return shareProtocol;
     }
-    public void setProcess(String process) 
+    public void setProcess(String process)
     {
         this.process = process;
     }
 
-    public String getProcess() 
+    public String getProcess()
     {
         return process;
     }
-    public void setChapterId(Long chapterId) 
+    public void setChapterId(Long chapterId)
     {
         this.chapterId = chapterId;
     }
 
-    public Long getChapterId() 
+    public Long getChapterId()
     {
         return chapterId;
     }
-    public void setPublishDate(Date publishDate) 
+    public void setPublishDate(Date publishDate)
     {
         this.publishDate = publishDate;
     }
 
-    public Date getPublishDate() 
+    public Date getPublishDate()
     {
         return publishDate;
     }
-    public void setReadNumber(Long readNumber) 
+    public void setReadNumber(Long readNumber)
     {
         this.readNumber = readNumber;
     }
 
-    public Long getReadNumber() 
+    public Long getReadNumber()
     {
         return readNumber;
     }
-    public void setIsTop(String isTop) 
+    public void setIsTop(String isTop)
     {
         this.isTop = isTop;
     }
 
-    public String getIsTop() 
+    public String getIsTop()
     {
         return isTop;
     }
-    public void setStatus(String status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public String getStatus()
     {
         return status;
     }
-    public void setDocumentLocation(String documentLocation) 
+    public void setDocumentLocation(String documentLocation)
     {
         this.documentLocation = documentLocation;
     }
 
-    public String getDocumentLocation() 
+    public String getDocumentLocation()
     {
         return documentLocation;
     }
-    public void setPictureLocation(String pictureLocation) 
+    public void setPictureLocation(String pictureLocation)
     {
         this.pictureLocation = pictureLocation;
     }
 
-    public String getPictureLocation() 
+    public String getPictureLocation()
     {
         return pictureLocation;
     }

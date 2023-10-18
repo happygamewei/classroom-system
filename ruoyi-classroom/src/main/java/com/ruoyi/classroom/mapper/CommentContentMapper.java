@@ -66,5 +66,11 @@ public interface CommentContentMapper
      */
     public List<CommentContent> findContentCountByTopic(Long topicId);
 
-    public  int deleteByCommentId (Long commentId);
+    /**
+     * 查找属于该公告的所有评论
+     * @param noticeId
+     * @return
+     */
+    public List<CommentContent> findContentCountByNotice(Long noticeId);
+    Long getCommentListTotal(Long noticeId);
 }
