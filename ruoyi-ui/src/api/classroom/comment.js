@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询评论管理列表
+// 查询评论列表
 export function listComment(query) {
   return request({
     url: '/classroom/comment/list',
@@ -9,7 +9,7 @@ export function listComment(query) {
   })
 }
 
-// 查询评论管理详细
+// 查询评论详细
 export function getComment(commentId) {
   return request({
     url: '/classroom/comment/' + commentId,
@@ -17,7 +17,7 @@ export function getComment(commentId) {
   })
 }
 
-// 新增评论管理
+// 新增评论
 export function addComment(data) {
   return request({
     url: '/classroom/comment',
@@ -26,7 +26,7 @@ export function addComment(data) {
   })
 }
 
-// 修改评论管理
+// 修改评论
 export function updateComment(data) {
   return request({
     url: '/classroom/comment',
@@ -35,7 +35,7 @@ export function updateComment(data) {
   })
 }
 
-// 删除评论管理
+// 删除评论
 export function delComment(commentId) {
   return request({
     url: '/classroom/comment/' + commentId,

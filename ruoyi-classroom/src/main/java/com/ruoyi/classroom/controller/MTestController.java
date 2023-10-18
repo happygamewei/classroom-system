@@ -2,6 +2,8 @@ package com.ruoyi.classroom.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.Anonymous;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +25,11 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 测试管理Controller
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
+@Anonymous
 @RestController
 @RequestMapping("/classroom/test")
 public class MTestController extends BaseController
@@ -37,7 +40,7 @@ public class MTestController extends BaseController
     /**
      * 查询测试管理列表
      */
-    @PreAuthorize("@ss.hasPermi('classroom:test:list')")
+//    @PreAuthorize("@ss.hasPermi('classroom:test:list')")
     @GetMapping("/list")
     public TableDataInfo list(Test test)
     {
@@ -62,8 +65,8 @@ public class MTestController extends BaseController
     /**
      * 获取测试管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('classroom:test:query')")
-    @GetMapping(value = "/{testId}")
+//    @PreAuthorize("@ss.hasPermi('classroom:test:query')")
+    @GetMapping(value = "selectTest/{testId}")
     public AjaxResult getInfo(@PathVariable("testId") Long testId)
     {
         return success(testService.selectTestByTestId(testId));
@@ -72,9 +75,9 @@ public class MTestController extends BaseController
     /**
      * 新增测试管理
      */
-    @PreAuthorize("@ss.hasPermi('classroom:test:add')")
+//    @PreAuthorize("@ss.hasPermi('classroom:test:add')")
     @Log(title = "测试管理", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/AddTest")
     public AjaxResult add(@RequestBody Test test)
     {
         return toAjax(testService.insertTest(test));
@@ -85,7 +88,7 @@ public class MTestController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('classroom:test:edit')")
     @Log(title = "测试管理", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping("/EditTest")
     public AjaxResult edit(@RequestBody Test test)
     {
         return toAjax(testService.updateTest(test));
@@ -94,11 +97,74 @@ public class MTestController extends BaseController
     /**
      * 删除测试管理
      */
-    @PreAuthorize("@ss.hasPermi('classroom:test:remove')")
+//    @PreAuthorize("@ss.hasPermi('classroom:test:remove')")
     @Log(title = "测试管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{testIds}")
     public AjaxResult remove(@PathVariable Long[] testIds)
     {
         return toAjax(testService.deleteTestByTestIds(testIds));
     }
+
+    /**
+     * 删除测试管理
+     */
+//    @PreAuthorize("@ss.hasPermi('classroom:test:remove')")
+    @Log(title = "测试管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("deleteTest/{testId}")
+    public AjaxResult deleteTest(@PathVariable Long testId)
+    {
+        return toAjax(testService.deleteTestByTestId(testId));
+    }
+
+    /**
+     * 计算该测试已批的人数并放入测试表
+     */
+    @GetMapping("/CalculateCorrrcted")
+    public void CalculateCorrrcted(Long testId) {
+        testService.CalculateCorrrcted(testId);
+    }
+
+
+    /**
+     * 获得该测试已批的人数
+     */
+    @GetMapping("/GetCorrrcted")
+    public int GetCorrrcted(Long testId) {
+        return testService.GetCorrrcted(testId);
+    }
+
+    /**
+     * 计算该测试已批的人数并放入测试表
+     */
+    @GetMapping("/CalculateUnpaid")
+    public void CalculateUnpaid(Long testId) {
+        testService.CalculateUnpaid(testId);
+    }
+
+
+    /**
+     * 获得该测试未交的人数
+     */
+    @GetMapping("/GetUnpaid")
+    public int GetUnpaid(Long testId) {
+        return testService.GetUnpaid(testId);
+    }
+
+    /**
+     * 获得该测试未批的人数
+     */
+    @GetMapping("/GetNotCorrected")
+    public int GetNotCorrected(Long testId){
+        return testService.GetNotCorrected(testId);
+    }
+
+
+    /**
+     * 根据test_id选择测试
+     */
+    @GetMapping("/SelectTest")
+    public Test SelectTest(Long testId){
+        return testService.SelectTest(testId);
+    }
+
 }

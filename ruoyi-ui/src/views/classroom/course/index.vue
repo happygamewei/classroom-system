@@ -25,6 +25,42 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="学年" prop="schoolYear">
+        <el-select
+          v-model="queryParams.schoolYear"
+          placeholder="请选择学年"
+          clearable
+        >
+          <el-option
+            v-for="dict in dict.type.class_school_year"
+            :key="dict.value"
+            :label="dict.value"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="学期" prop="term">
+        <el-select
+          v-model="queryParams.term"
+          placeholder="请选择学期"
+          clearable
+        >
+          <el-option
+            v-for="dict in dict.type.class_term"
+            :key="dict.value"
+            :label="dict.value"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="授课模式" prop="teachMode">
+        <el-input
+          v-model="queryParams.teachMode"
+          placeholder="请输入授课模式"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="学时数" prop="creditHours">
         <el-input
           v-model="queryParams.creditHours"
@@ -37,6 +73,14 @@
         <el-input
           v-model="queryParams.place"
           placeholder="请输入授课地点"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="机构相关" prop="institutional">
+        <el-input
+          v-model="queryParams.institutional"
+          placeholder="请输入机构相关"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -103,6 +147,7 @@
 
     <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="课程id" align="center" prop="courseId" />
       <el-table-column label="课程名称" align="center" prop="name" />
       <el-table-column label="课程码" align="center" prop="code" />
       <el-table-column label="教学班级" align="center" prop="teachClass" />
@@ -143,7 +188,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改课程管理对话框 -->
+    <!-- 添加或修改课程对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
@@ -165,7 +210,7 @@
                 <el-option
                   v-for="dict in dict.type.class_school_year"
                   :key="dict.value"
-                  :label="dict.label"
+                  :label="dict.value"
                   :value="dict.value"
                 ></el-option>
               </el-select>
@@ -177,24 +222,11 @@
                 <el-option
                   v-for="dict in dict.type.class_term"
                   :key="dict.value"
-                  :label="dict.label"
+                  :label="dict.value"
                   :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="学时数" prop="creditHours">
-              <el-input-number v-model="form.creditHours" controls-position="right" :min="0" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="授课地点" prop="place">
-              <el-input v-model="form.place" placeholder="请输入授课地点" />
-            </el-form-item>
-
           </el-col>
         </el-row>
         <el-row>
@@ -210,6 +242,25 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="学时数" prop="creditHours">
+              <el-input-number v-model="form.creditHours" :min="0" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="课程介绍" prop="introduce">
+              <el-input v-model="form.introduce" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="授课地点" prop="place">
+              <el-input v-model="form.place" placeholder="请输入授课地点" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
             <el-form-item label="机构相关" prop="institutional">
               <el-radio-group v-model="form.institutional">
                 <el-radio
@@ -220,11 +271,6 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-            <el-form-item label="课程介绍">
-              <editor v-model="form.introduce" :min-height="192"/>
-            </el-form-item>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -240,7 +286,7 @@ import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api
 
 export default {
   name: "Course",
-  dicts: ['class_school_year', 'class_term', 'class_teach_mode', 'class_institutional'],
+  dicts: ['class_teach_mode', 'class_institutional', 'class_school_year', 'class_term'],
   data() {
     return {
       // 遮罩层
@@ -255,7 +301,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 课程管理表格数据
+      // 课程表格数据
       courseList: [],
       // 弹出层标题
       title: "",
@@ -292,10 +338,10 @@ export default {
           { required: true, message: "教学班级不能为空", trigger: "blur" }
         ],
         schoolYear: [
-          { required: true, message: "学年不能为空", trigger: "change" }
+          { required: true, message: "学年不能为空", trigger: "blur" }
         ],
         term: [
-          { required: true, message: "学期不能为空", trigger: "change" }
+          { required: true, message: "学期不能为空", trigger: "blur" }
         ],
         createBy: [
           { required: true, message: "创建人不能为空", trigger: "blur" }
@@ -310,7 +356,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询课程管理列表 */
+    /** 查询课程列表 */
     getList() {
       this.loading = true;
       listCourse(this.queryParams).then(response => {
@@ -333,7 +379,7 @@ export default {
         teachClass: null,
         schoolYear: null,
         term: null,
-        teachMode: [],
+        teachMode: null,
         creditHours: null,
         introduce: null,
         place: null,
@@ -367,7 +413,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加课程管理";
+      this.title = "添加课程";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -375,16 +421,14 @@ export default {
       const courseId = row.courseId || this.ids
       getCourse(courseId).then(response => {
         this.form = response.data;
-        this.form.teachMode = this.form.teachMode.split(",");
         this.open = true;
-        this.title = "修改课程管理";
+        this.title = "修改课程";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          // this.form.teachMode = this.form.teachMode.join(",");
           if (this.form.courseId != null) {
             updateCourse(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -404,7 +448,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const courseIds = row.courseId || this.ids;
-      this.$modal.confirm('是否确认删除课程管理编号为"' + courseIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除课程编号为"' + courseIds + '"的数据项？').then(function() {
         return delCourse(courseIds);
       }).then(() => {
         this.getList();

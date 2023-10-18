@@ -1,26 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="测试标题" prop="title">
+      <el-form-item label="话题标题" prop="title">
         <el-input
           v-model="queryParams.title"
-          placeholder="请输入测试标题"
+          placeholder="请输入话题标题"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建者id" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入创建者id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="测试标签，1普通测试，2考试" prop="testLabel">
+      <el-form-item label="测试标签" prop="testLabel">
         <el-input
           v-model="queryParams.testLabel"
-          placeholder="请输入测试标签，1普通测试，2考试"
+          placeholder="请输入测试标签"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -152,10 +144,9 @@
     <el-table v-loading="loading" :data="testList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="测试id" align="center" prop="testId" />
-      <el-table-column label="测试标题" align="center" prop="title" />
-      <el-table-column label="测试内容" align="center" prop="content" />
-      <el-table-column label="创建者id" align="center" prop="userId" />
-      <el-table-column label="测试标签，1普通测试，2考试" align="center" prop="testLabel" />
+      <el-table-column label="话题标题" align="center" prop="title" />
+      <el-table-column label="话题内容" align="center" prop="content" />
+      <el-table-column label="测试标签" align="center" prop="testLabel" />
       <el-table-column label="活动类型标签" align="center" prop="typeLabel" />
       <el-table-column label="共享协议" align="center" prop="shareProtocol" />
       <el-table-column label="应用环节" align="center" prop="process" />
@@ -173,7 +164,7 @@
       <el-table-column label="总分" align="center" prop="totalScore" />
       <el-table-column label="已批人数" align="center" prop="corrrcted" />
       <el-table-column label="未交人数" align="center" prop="unpaid" />
-      <el-table-column label="int	状态，0禁用，1激活" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -193,7 +184,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -203,33 +194,70 @@
     />
 
     <!-- 添加或修改测试管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="测试标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入测试标题" />
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+
+        <el-form-item label="话题标题" prop="title">
+          <el-input v-model="form.title" placeholder="请输入话题标题" />
         </el-form-item>
-        <el-form-item label="测试内容">
+        <el-form-item label="话题内容">
           <editor v-model="form.content" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="创建者id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入创建者id" />
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="测试标签" prop="testLabel">
+              <el-input v-model="form.testLabel" placeholder="请输入测试标签" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="活动类型标签" prop="typeLabel">
+              <el-input v-model="form.typeLabel" placeholder="请输入活动类型标签" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="共享协议" prop="shareProtocol">
+          <!-- <el-input v-model="form.shareProtocol" placeholder="请输入共享协议" /> -->
+          <el-select v-model="form.shareProtocol" placeholder="请输入共享协议" style="width: 250px">
+                <el-option
+                  v-for="dict in dict.type.class_creative_commons_agreements"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
         </el-form-item>
-        <el-form-item label="测试标签，1普通测试，2考试" prop="testLabel">
-          <el-input v-model="form.testLabel" placeholder="请输入测试标签，1普通测试，2考试" />
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="应用环节" prop="process">
+          <!-- <el-input v-model="form.process" placeholder="请输入应用环节" /> -->
+          <el-select v-model="form.process" placeholder="请输入应用环节" style="width: 250px">
+                <el-option
+                  v-for="dict in dict.type.class_application_link"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
         </el-form-item>
-        <el-form-item label="活动类型标签" prop="typeLabel">
-          <el-input v-model="form.typeLabel" placeholder="请输入活动类型标签" />
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="所属章节" prop="chapterId">
+          <!-- <el-input v-model="form.chapterId" placeholder="请输入所属章节" /> -->
+          <el-select v-model="form.chapterId" placeholder="请输入所属章节" style="width: 250px">
+                <el-option
+
+                ></el-option>
+              </el-select>
         </el-form-item>
-        <el-form-item label="共享协议" prop="shareProtocol">
-          <el-input v-model="form.shareProtocol" placeholder="请输入共享协议" />
-        </el-form-item>
-        <el-form-item label="应用环节" prop="process">
-          <el-input v-model="form.process" placeholder="请输入应用环节" />
-        </el-form-item>
-        <el-form-item label="所属章节" prop="chapterId">
-          <el-input v-model="form.chapterId" placeholder="请输入所属章节" />
-        </el-form-item>
-        <el-form-item label="发布时间" prop="publishDate">
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="发布时间" prop="publishDate">
           <el-date-picker clearable
             v-model="form.publishDate"
             type="date"
@@ -237,7 +265,12 @@
             placeholder="请选择发布时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="截至时间" prop="deadline">
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="截至时间" prop="deadline">
           <el-date-picker clearable
             v-model="form.deadline"
             type="date"
@@ -245,15 +278,32 @@
             placeholder="请选择截至时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="总分" prop="totalScore">
-          <el-input v-model="form.totalScore" placeholder="请输入总分" />
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="总分" prop="totalScore">
+          <!-- <el-input v-model="form.totalScore" placeholder="请输入总分" /> -->
+          <el-input-number v-model="form.totalScore" :min="0" :max="100" />
         </el-form-item>
-        <el-form-item label="已批人数" prop="corrrcted">
-          <el-input v-model="form.corrrcted" placeholder="请输入已批人数" />
+          </el-col>
+        </el-row>
+
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="已批人数" prop="corrrcted">
+          <!-- <el-input v-model="form.corrrcted" placeholder="请输入已批人数" /> -->
+          <el-input-number v-model="form.corrrcted" :min="0" />
         </el-form-item>
-        <el-form-item label="未交人数" prop="unpaid">
-          <el-input v-model="form.unpaid" placeholder="请输入未交人数" />
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="未交人数" prop="unpaid">
+          <!-- <el-input v-model="form.unpaid" placeholder="请输入未交人数" /> -->
+          <el-input-number v-model="form.unpaid" :min="0" />
         </el-form-item>
+          </el-col>
+        </el-row>
+
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -268,6 +318,7 @@ import { listTest, getTest, delTest, addTest, updateTest } from "@/api/classroom
 
 export default {
   name: "Test",
+  dicts:['class_creative_commons_agreements','class_application_link'],
   data() {
     return {
       // 遮罩层
@@ -294,7 +345,6 @@ export default {
         pageSize: 10,
         title: null,
         content: null,
-        userId: null,
         testLabel: null,
         typeLabel: null,
         shareProtocol: null,
@@ -312,14 +362,14 @@ export default {
       // 表单校验
       rules: {
         title: [
-          { required: true, message: "测试标题不能为空", trigger: "blur" }
+          { required: true, message: "话题标题不能为空", trigger: "blur" }
         ],
         createBy: [
-          { required: true, message: "创建者不能为空", trigger: "blur" }
+          { required: true, message: "创建人不能为空", trigger: "blur" }
         ],
         createTime: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
-        ],
+        ]
       }
     };
   },
@@ -347,7 +397,6 @@ export default {
         testId: null,
         title: null,
         content: null,
-        userId: null,
         testLabel: null,
         typeLabel: null,
         shareProtocol: null,
@@ -360,9 +409,7 @@ export default {
         unpaid: null,
         status: null,
         createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null
+        createTime: null
       };
       this.resetForm("form");
     },

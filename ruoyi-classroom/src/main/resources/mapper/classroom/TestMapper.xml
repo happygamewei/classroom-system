@@ -3,8 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.TestMapper">
-    
-    <resultMap type="Test" id="TestResult">
+
+    <resultMap type="com.ruoyi.classroom.domain.Test" id="TestResult">
         <result property="testId"    column="test_id"    />
         <result property="title"    column="title"    />
         <result property="content"    column="content"    />
@@ -30,9 +30,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select test_id, title, content, user_id, test_label, type_label, share_protocol, process, chapter_id, publish_date, deadline, Total_score, corrrcted, unpaid, status, create_by, create_time, update_by, update_time from tb_test
     </sql>
 
-    <select id="selectTestList" parameterType="Test" resultMap="TestResult">
+    <select id="selectTestList" parameterType="com.ruoyi.classroom.domain.Test" resultMap="TestResult">
         <include refid="selectTestVo"/>
-        <where>  
+        <where>
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
@@ -49,13 +49,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectTestByTestId" parameterType="Long" resultMap="TestResult">
         <include refid="selectTestVo"/>
         where test_id = #{testId}
     </select>
-        
-    <insert id="insertTest" parameterType="Test" useGeneratedKeys="true" keyProperty="testId">
+
+    <insert id="insertTest" parameterType="com.ruoyi.classroom.domain.Test" useGeneratedKeys="true" keyProperty="testId">
         insert into tb_test
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">title,</if>
@@ -99,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateTest" parameterType="Test">
+    <update id="updateTest" parameterType="com.ruoyi.classroom.domain.Test">
         update tb_test
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null and title != ''">title = #{title},</if>
@@ -129,9 +129,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTestByTestIds" parameterType="String">
-        delete from tb_test where test_id in 
+        delete from tb_test where test_id in
         <foreach item="testId" collection="array" open="(" separator="," close=")">
             #{testId}
         </foreach>
     </delete>
+
+
+
+    <select id="CalculateBatchQuantity" parameterType="Long" resultType="java.lang.Integer">
+        SELECT COUNT(1)AS if_pass FROM tb_test_pass_check WHERE test_id = #{testId} AND If_pass = '1' ;
+    </select>
+
+    <update id="InputCorrrcted" >
+        update tb_test set corrrcted = #{corrrcted} where test_id = #{testId};
+    </update>
+    <update id="InputUnpaid">
+        update tb_test set unpaid = #{unpaid} where test_id = #{testId};
+    </update>
+
+    <select id="GetCorrrcted" parameterType="Long" resultType="java.lang.Integer">
+        SELECT corrrcted FROM tb_test where test_id = #{testId};
+    </select>
+    <select id="GetUnpaid" parameterType="Long" resultType="java.lang.Integer">
+        SELECT unpaid FROM tb_test where test_id = #{testId};
+    </select>
+    <select id="CalculateUnpaid"  parameterType="Long" resultType="java.lang.Integer">
+        SELECT COUNT(1)AS If_check FROM tb_test_pass_check WHERE test_id = #{testId} AND If_check = '0' ;
+    </select>
+    <select id="GetPaid" parameterType="Long"  resultType="java.lang.Integer">
+        SELECT COUNT(1)AS If_check FROM tb_test_pass_check WHERE test_id = #{testId} AND If_check = '1'
+    </select>
+    <select id="SelectTest" parameterType="Long"  resultType="com.ruoyi.classroom.domain.Test">
+        select * from tb_test where test_id = #{testId};
+    </select>
+
 </mapper>

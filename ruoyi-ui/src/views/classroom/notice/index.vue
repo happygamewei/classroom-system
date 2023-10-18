@@ -9,14 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="活动类型标签" prop="typeLabel">
-        <el-input
-          v-model="queryParams.typeLabel"
-          placeholder="请输入活动类型标签"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="发布时间" prop="publishDate">
         <el-date-picker clearable
           v-model="queryParams.publishDate"
@@ -24,6 +16,22 @@
           value-format="yyyy-MM-dd"
           placeholder="请选择发布时间">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="已读数量" prop="readNumber">
+        <el-input
+          v-model="queryParams.readNumber"
+          placeholder="请输入已读数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="是否置顶" prop="isTop">
+        <el-input
+          v-model="queryParams.isTop"
+          placeholder="请输入是否置顶"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -92,14 +100,8 @@
         </template>
       </el-table-column>
       <el-table-column label="已读数量" align="center" prop="readNumber" />
-      <el-table-column label="是否置顶，0否，1是" align="center" prop="isTop" />
-      <el-table-column label="状态，0禁用，1激活" align="center" prop="status" />
-      <el-table-column label="文件附件" align="center" prop="documentLocation" />
-      <el-table-column label="图片附件" align="center" prop="pictureLocation" width="100">
-        <template slot-scope="scope">
-          <image-preview :src="scope.row.pictureLocation" :width="50" :height="50"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="是否置顶" align="center" prop="isTop" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -119,7 +121,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -137,9 +139,6 @@
         <el-form-item label="公告内容">
           <editor v-model="form.content" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="活动类型标签" prop="typeLabel">
-          <el-input v-model="form.typeLabel" placeholder="请输入活动类型标签" />
-        </el-form-item>
         <el-form-item label="发布时间" prop="publishDate">
           <el-date-picker clearable
             v-model="form.publishDate"
@@ -151,11 +150,8 @@
         <el-form-item label="已读数量" prop="readNumber">
           <el-input v-model="form.readNumber" placeholder="请输入已读数量" />
         </el-form-item>
-        <el-form-item label="文件附件" prop="documentLocation">
-          <file-upload v-model="form.documentLocation"/>
-        </el-form-item>
-        <el-form-item label="图片附件" prop="pictureLocation">
-          <image-upload v-model="form.pictureLocation"/>
+        <el-form-item label="是否置顶，0否，1是" prop="isTop">
+          <el-input v-model="form.isTop" placeholder="请输入是否置顶，0否，1是" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -202,26 +198,16 @@ export default {
         process: null,
         chapterId: null,
         publishDate: null,
+        readNumber: null,
         isTop: null,
         status: null,
-        documentLocation: null,
-        pictureLocation: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        noticeId: [
-          { required: true, message: "公告id不能为空", trigger: "blur" }
-        ],
         title: [
           { required: true, message: "公告标题不能为空", trigger: "blur" }
-        ],
-        createBy: [
-          { required: true, message: "创建者不能为空", trigger: "blur" }
-        ],
-        createTime: [
-          { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
       }
     };
@@ -261,9 +247,7 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null,
-        documentLocation: null,
-        pictureLocation: null
+        updateTime: null
       };
       this.resetForm("form");
     },

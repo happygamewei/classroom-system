@@ -5,15 +5,15 @@ import com.ruoyi.classroom.domain.Test;
 
 /**
  * 测试管理Service接口
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
-public interface ITestService 
+public interface ITestService
 {
     /**
      * 查询测试管理
-     * 
+     *
      * @param testId 测试管理主键
      * @return 测试管理
      */
@@ -21,7 +21,7 @@ public interface ITestService
 
     /**
      * 查询测试管理列表
-     * 
+     *
      * @param test 测试管理
      * @return 测试管理集合
      */
@@ -29,7 +29,7 @@ public interface ITestService
 
     /**
      * 新增测试管理
-     * 
+     *
      * @param test 测试管理
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface ITestService
 
     /**
      * 修改测试管理
-     * 
+     *
      * @param test 测试管理
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface ITestService
 
     /**
      * 批量删除测试管理
-     * 
+     *
      * @param testIds 需要删除的测试管理主键集合
      * @return 结果
      */
@@ -53,9 +53,59 @@ public interface ITestService
 
     /**
      * 删除测试管理信息
-     * 
+     *
      * @param testId 测试管理主键
      * @return 结果
      */
     public int deleteTestByTestId(Long testId);
+
+
+    /**
+     * 计算该测试已批的人数并放入测试表
+     *
+     * @param testId 测试管理主键
+     * @return 结果
+     */
+    public void CalculateCorrrcted(Long testId);
+
+
+    /**
+     * 获得测试已批人数
+     *
+     * @return 结果
+     */
+    public int GetCorrrcted(Long testId);
+
+
+    /**
+     * 计算该测试未交的人数并放入测试表
+     *
+     * @param testId 测试管理主键
+     * @return 结果
+     */
+    public void CalculateUnpaid(Long testId);
+
+    /**
+     * 获得未交人数
+     *
+     * @return 结果
+     */
+    public int GetUnpaid(Long testId);
+
+    /**
+     * 获得未批人数
+     *
+     * @return 结果
+     */
+    public int GetNotCorrected(Long testId);
+
+    /**
+     * 根据test_id选择测试
+     *
+     * @return 结果
+     */
+    public Test SelectTest(Long testId);
+
+
+
 }

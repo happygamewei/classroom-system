@@ -9,54 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建者id" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入创建者id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="活动类型标签" prop="typeLabel">
-        <el-input
-          v-model="queryParams.typeLabel"
-          placeholder="请输入活动类型标签"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="共享协议" prop="shareProtocol">
-        <el-input
-          v-model="queryParams.shareProtocol"
-          placeholder="请输入共享协议"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="应用环节" prop="process">
-        <el-input
-          v-model="queryParams.process"
-          placeholder="请输入应用环节"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="所属章节" prop="chapterId">
-        <el-input
-          v-model="queryParams.chapterId"
-          placeholder="请输入所属章节"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发布状态，未发布为0，发布为1" prop="ifPublish">
-        <el-input
-          v-model="queryParams.ifPublish"
-          placeholder="请输入发布状态，未发布为0，发布为1"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="发布时间" prop="publishDate">
         <el-date-picker clearable
           v-model="queryParams.publishDate"
@@ -97,26 +49,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否查重，0否，1是" prop="isCheck">
+      <el-form-item label="是否查重" prop="isCheck">
         <el-input
           v-model="queryParams.isCheck"
-          placeholder="请输入是否查重，0否，1是"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="查重警戒值" prop="checkNumber">
-        <el-input
-          v-model="queryParams.checkNumber"
-          placeholder="请输入查重警戒值"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="是否自动打回，0否1是" prop="ifBack">
-        <el-input
-          v-model="queryParams.ifBack"
-          placeholder="请输入是否自动打回，0否1是"
+          placeholder="请输入是否查重"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -178,12 +114,10 @@
       <el-table-column label="作业id" align="center" prop="homeworkId" />
       <el-table-column label="作业标题" align="center" prop="title" />
       <el-table-column label="作业内容" align="center" prop="content" />
-      <el-table-column label="创建者id" align="center" prop="userId" />
       <el-table-column label="活动类型标签" align="center" prop="typeLabel" />
       <el-table-column label="共享协议" align="center" prop="shareProtocol" />
       <el-table-column label="应用环节" align="center" prop="process" />
       <el-table-column label="所属章节" align="center" prop="chapterId" />
-      <el-table-column label="发布状态，未发布为0，发布为1" align="center" prop="ifPublish" />
       <el-table-column label="发布时间" align="center" prop="publishDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.publishDate, '{y}-{m}-{d}') }}</span>
@@ -197,10 +131,8 @@
       <el-table-column label="总分" align="center" prop="totalScore" />
       <el-table-column label="已批完" align="center" prop="approved" />
       <el-table-column label="未交" align="center" prop="unpaid" />
-      <el-table-column label="是否查重，0否，1是" align="center" prop="isCheck" />
-      <el-table-column label="查重警戒值" align="center" prop="checkNumber" />
-      <el-table-column label="是否自动打回，0否1是" align="center" prop="ifBack" />
-      <el-table-column label="状态，0禁用，1激活" align="center" prop="status" />
+      <el-table-column label="是否查重" align="center" prop="isCheck" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -220,7 +152,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -237,24 +169,6 @@
         </el-form-item>
         <el-form-item label="作业内容">
           <editor v-model="form.content" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="创建者id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入创建者id" />
-        </el-form-item>
-        <el-form-item label="活动类型标签" prop="typeLabel">
-          <el-input v-model="form.typeLabel" placeholder="请输入活动类型标签" />
-        </el-form-item>
-        <el-form-item label="共享协议" prop="shareProtocol">
-          <el-input v-model="form.shareProtocol" placeholder="请输入共享协议" />
-        </el-form-item>
-        <el-form-item label="应用环节" prop="process">
-          <el-input v-model="form.process" placeholder="请输入应用环节" />
-        </el-form-item>
-        <el-form-item label="所属章节" prop="chapterId">
-          <el-input v-model="form.chapterId" placeholder="请输入所属章节" />
-        </el-form-item>
-        <el-form-item label="发布状态，未发布为0，发布为1" prop="ifPublish">
-          <el-input v-model="form.ifPublish" placeholder="请输入发布状态，未发布为0，发布为1" />
         </el-form-item>
         <el-form-item label="发布时间" prop="publishDate">
           <el-date-picker clearable
@@ -283,12 +197,6 @@
         </el-form-item>
         <el-form-item label="是否查重，0否，1是" prop="isCheck">
           <el-input v-model="form.isCheck" placeholder="请输入是否查重，0否，1是" />
-        </el-form-item>
-        <el-form-item label="查重警戒值" prop="checkNumber">
-          <el-input v-model="form.checkNumber" placeholder="请输入查重警戒值" />
-        </el-form-item>
-        <el-form-item label="是否自动打回，0否1是" prop="ifBack">
-          <el-input v-model="form.ifBack" placeholder="请输入是否自动打回，0否1是" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -330,20 +238,16 @@ export default {
         pageSize: 10,
         title: null,
         content: null,
-        userId: null,
         typeLabel: null,
         shareProtocol: null,
         process: null,
         chapterId: null,
-        ifPublish: null,
         publishDate: null,
         deadline: null,
         totalScore: null,
         approved: null,
         unpaid: null,
         isCheck: null,
-        checkNumber: null,
-        ifBack: null,
         status: null,
       },
       // 表单参数
@@ -380,20 +284,16 @@ export default {
         homeworkId: null,
         title: null,
         content: null,
-        userId: null,
         typeLabel: null,
         shareProtocol: null,
         process: null,
         chapterId: null,
-        ifPublish: null,
         publishDate: null,
         deadline: null,
         totalScore: null,
         approved: null,
         unpaid: null,
         isCheck: null,
-        checkNumber: null,
-        ifBack: null,
         status: null,
         createBy: null,
         createTime: null,

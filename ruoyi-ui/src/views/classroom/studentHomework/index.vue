@@ -17,14 +17,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="上传文件路径" prop="filePath">
-        <el-input
-          v-model="queryParams.filePath"
-          placeholder="请输入上传文件路径"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="提交时间" prop="submitTime">
         <el-date-picker clearable
           v-model="queryParams.submitTime"
@@ -45,14 +37,6 @@
         <el-input
           v-model="queryParams.checkNumber"
           placeholder="请输入批阅次数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="催交(次数)" prop="urgeSubmit">
-        <el-input
-          v-model="queryParams.urgeSubmit"
-          placeholder="请输入催交(次数)"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -122,19 +106,18 @@
       <el-table-column label="学生作业表id" align="center" prop="shId" />
       <el-table-column label="作业id" align="center" prop="homeworkId" />
       <el-table-column label="学生id" align="center" prop="studentId" />
-      <el-table-column label="上传文件路径" align="center" prop="filePath" />
-      <el-table-column label="提交状态，0未提交，1提交" align="center" prop="submitStatus" />
+      <el-table-column label="提交状态" align="center" prop="submitStatus" />
       <el-table-column label="提交时间" align="center" prop="submitTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.submitTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="字数" align="center" prop="wordNumber" />
+      <el-table-column label="所属章节" align="center" prop="chapterId" />
       <el-table-column label="批阅次数" align="center" prop="checkNumber" />
-      <el-table-column label="催交(次数)" align="center" prop="urgeSubmit" />
       <el-table-column label="成绩" align="center" prop="grade" />
-      <el-table-column label="作业状态，1批改，2打回" align="center" prop="workStatus" />
-      <el-table-column label="状态，0禁用，1激活" align="center" prop="status" />
+      <el-table-column label="作业状态" align="center" prop="workStatus" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -154,7 +137,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -172,9 +155,6 @@
         <el-form-item label="学生id" prop="studentId">
           <el-input v-model="form.studentId" placeholder="请输入学生id" />
         </el-form-item>
-        <el-form-item label="上传文件路径" prop="filePath">
-          <el-input v-model="form.filePath" placeholder="请输入上传文件路径" />
-        </el-form-item>
         <el-form-item label="提交时间" prop="submitTime">
           <el-date-picker clearable
             v-model="form.submitTime"
@@ -188,9 +168,6 @@
         </el-form-item>
         <el-form-item label="批阅次数" prop="checkNumber">
           <el-input v-model="form.checkNumber" placeholder="请输入批阅次数" />
-        </el-form-item>
-        <el-form-item label="催交(次数)" prop="urgeSubmit">
-          <el-input v-model="form.urgeSubmit" placeholder="请输入催交(次数)" />
         </el-form-item>
         <el-form-item label="成绩" prop="grade">
           <el-input v-model="form.grade" placeholder="请输入成绩" />
@@ -235,12 +212,11 @@ export default {
         pageSize: 10,
         homeworkId: null,
         studentId: null,
-        filePath: null,
         submitStatus: null,
         submitTime: null,
         wordNumber: null,
+        chapterId: null,
         checkNumber: null,
-        urgeSubmit: null,
         grade: null,
         workStatus: null,
         status: null,
@@ -282,12 +258,11 @@ export default {
         shId: null,
         homeworkId: null,
         studentId: null,
-        filePath: null,
         submitStatus: null,
         submitTime: null,
         wordNumber: null,
+        chapterId: null,
         checkNumber: null,
-        urgeSubmit: null,
         grade: null,
         workStatus: null,
         status: null,

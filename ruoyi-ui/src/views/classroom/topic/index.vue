@@ -9,6 +9,30 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="活动类型标签" prop="typeLabel">
+        <el-input
+          v-model="queryParams.typeLabel"
+          placeholder="请输入活动类型标签"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="共享协议" prop="shareProtocol">
+        <el-input
+          v-model="queryParams.shareProtocol"
+          placeholder="请输入共享协议"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="应用环节" prop="process">
+        <el-input
+          v-model="queryParams.process"
+          placeholder="请输入应用环节"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="所属章节" prop="chapterId">
         <el-input
           v-model="queryParams.chapterId"
@@ -61,14 +85,6 @@
         <el-input
           v-model="queryParams.likeCount"
           placeholder="请输入点赞次数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户id" prop="userId">
-        <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -149,7 +165,6 @@
       <el-table-column label="已参与数量" align="center" prop="joinNumber" />
       <el-table-column label="点赞次数" align="center" prop="likeCount" />
       <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="用户id" align="center" prop="userId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -169,7 +184,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -178,7 +193,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改话题对话框 -->
+    <!-- 添加或修改话题管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="话题标题" prop="title">
@@ -186,6 +201,15 @@
         </el-form-item>
         <el-form-item label="话题内容">
           <editor v-model="form.content" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="活动类型标签" prop="typeLabel">
+          <el-input v-model="form.typeLabel" placeholder="请输入活动类型标签" />
+        </el-form-item>
+        <el-form-item label="共享协议" prop="shareProtocol">
+          <el-input v-model="form.shareProtocol" placeholder="请输入共享协议" />
+        </el-form-item>
+        <el-form-item label="应用环节" prop="process">
+          <el-input v-model="form.process" placeholder="请输入应用环节" />
         </el-form-item>
         <el-form-item label="所属章节" prop="chapterId">
           <el-input v-model="form.chapterId" placeholder="请输入所属章节" />
@@ -218,9 +242,6 @@
         <el-form-item label="点赞次数" prop="likeCount">
           <el-input v-model="form.likeCount" placeholder="请输入点赞次数" />
         </el-form-item>
-        <el-form-item label="用户id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户id" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -249,7 +270,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 话题表格数据
+      // 话题管理表格数据
       topicList: [],
       // 弹出层标题
       title: "",
@@ -272,12 +293,20 @@ export default {
         joinNumber: null,
         likeCount: null,
         status: null,
-        userId: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        title: [
+          { required: true, message: "话题标题不能为空", trigger: "blur" }
+        ],
+        createBy: [
+          { required: true, message: "创建人不能为空", trigger: "blur" }
+        ],
+        createTime: [
+          { required: true, message: "创建时间不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -285,7 +314,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询话题列表 */
+    /** 查询话题管理列表 */
     getList() {
       this.loading = true;
       listTopic(this.queryParams).then(response => {
@@ -319,8 +348,7 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null,
-        userId: null
+        updateTime: null
       };
       this.resetForm("form");
     },
@@ -344,7 +372,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加话题";
+      this.title = "添加话题管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -353,7 +381,7 @@ export default {
       getTopic(topicId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改话题";
+        this.title = "修改话题管理";
       });
     },
     /** 提交按钮 */
@@ -379,7 +407,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const topicIds = row.topicId || this.ids;
-      this.$modal.confirm('是否确认删除话题编号为"' + topicIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除话题管理编号为"' + topicIds + '"的数据项？').then(function() {
         return delTopic(topicIds);
       }).then(() => {
         this.getList();

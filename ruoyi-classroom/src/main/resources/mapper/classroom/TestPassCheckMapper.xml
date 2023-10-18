@@ -3,8 +3,8 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.TestPassCheckMapper">
-    
-    <resultMap type="TestPassCheck" id="TestPassCheckResult">
+
+    <resultMap type="com.ruoyi.classroom.domain.TestPassCheck" id="TestPassCheckResult">
         <result property="testId"    column="test_id"    />
         <result property="studentId"    column="student_id"    />
         <result property="teacherId"    column="teacher_id"    />
@@ -21,21 +21,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select test_id, student_id, teacher_id, if_pass, if_check, status, create_by, create_time, update_by, update_time from tb_test_pass_check
     </sql>
 
-    <select id="selectTestPassCheckList" parameterType="TestPassCheck" resultMap="TestPassCheckResult">
+    <select id="selectTestPassCheckList" parameterType="com.ruoyi.classroom.domain.TestPassCheck" resultMap="TestPassCheckResult">
         <include refid="selectTestPassCheckVo"/>
-        <where>  
+        <where>
             <if test="ifPass != null  and ifPass != ''"> and if_pass = #{ifPass}</if>
             <if test="ifCheck != null  and ifCheck != ''"> and if_check = #{ifCheck}</if>
             <if test="status != null "> and status = #{status}</if>
         </where>
     </select>
-    
+
     <select id="selectTestPassCheckByTestId" parameterType="Long" resultMap="TestPassCheckResult">
         <include refid="selectTestPassCheckVo"/>
         where test_id = #{testId}
     </select>
-        
-    <insert id="insertTestPassCheck" parameterType="TestPassCheck">
+
+
+    <insert id="insertTestPassCheck" parameterType="com.ruoyi.classroom.domain.TestPassCheck">
         insert into tb_test_pass_check
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="testId != null">test_id,</if>
@@ -63,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateTestPassCheck" parameterType="TestPassCheck">
+    <update id="updateTestPassCheck" parameterType="com.ruoyi.classroom.domain.TestPassCheck">
         update tb_test_pass_check
         <trim prefix="SET" suffixOverrides=",">
             <if test="studentId != null">student_id = #{studentId},</if>
@@ -84,9 +85,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteTestPassCheckByTestIds" parameterType="String">
-        delete from tb_test_pass_check where test_id in 
+        delete from tb_test_pass_check where test_id in
         <foreach item="testId" collection="array" open="(" separator="," close=")">
             #{testId}
         </foreach>
     </delete>
+
+
 </mapper>

@@ -25,6 +25,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="是否允许下载" prop="isDownload">
+        <el-input
+          v-model="queryParams.isDownload"
+          placeholder="请输入是否允许下载"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="活动类型标签" prop="typeLabel">
         <el-input
           v-model="queryParams.typeLabel"
@@ -37,6 +45,14 @@
         <el-input
           v-model="queryParams.shareProtocol"
           placeholder="请输入共享协议"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="应用环节" prop="process">
+        <el-input
+          v-model="queryParams.process"
+          placeholder="请输入应用环节"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -85,14 +101,6 @@
         <el-input
           v-model="queryParams.studying"
           placeholder="请输入学习中人数"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="未学习人数" prop="nostudying">
-        <el-input
-          v-model="queryParams.nostudying"
-          placeholder="请输入未学习人数"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -151,11 +159,11 @@
 
     <el-table v-loading="loading" :data="resourceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="资料id，主键" align="center" prop="resourceId" />
+      <el-table-column label="资料id" align="center" prop="resourceId" />
       <el-table-column label="资料标题" align="center" prop="title" />
       <el-table-column label="资料地址" align="center" prop="path" />
       <el-table-column label="资料大小" align="center" prop="size" />
-      <el-table-column label="是否允许下载，0否，1是" align="center" prop="isDownload" />
+      <el-table-column label="是否允许下载" align="center" prop="isDownload" />
       <el-table-column label="类型" align="center" prop="type" />
       <el-table-column label="活动类型标签" align="center" prop="typeLabel" />
       <el-table-column label="共享协议" align="center" prop="shareProtocol" />
@@ -174,8 +182,7 @@
       <el-table-column label="总分" align="center" prop="totalScore" />
       <el-table-column label="已完成人数" align="center" prop="completed" />
       <el-table-column label="学习中人数" align="center" prop="studying" />
-      <el-table-column label="未学习人数" align="center" prop="nostudying" />
-      <el-table-column label="状态，0禁用，1激活" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -195,7 +202,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -216,14 +223,17 @@
         <el-form-item label="资料大小" prop="size">
           <el-input v-model="form.size" placeholder="请输入资料大小" />
         </el-form-item>
-        <el-form-item label="创建者id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入创建者id" />
+        <el-form-item label="是否允许下载，0否，1是" prop="isDownload">
+          <el-input v-model="form.isDownload" placeholder="请输入是否允许下载，0否，1是" />
         </el-form-item>
         <el-form-item label="活动类型标签" prop="typeLabel">
           <el-input v-model="form.typeLabel" placeholder="请输入活动类型标签" />
         </el-form-item>
         <el-form-item label="共享协议" prop="shareProtocol">
           <el-input v-model="form.shareProtocol" placeholder="请输入共享协议" />
+        </el-form-item>
+        <el-form-item label="应用环节" prop="process">
+          <el-input v-model="form.process" placeholder="请输入应用环节" />
         </el-form-item>
         <el-form-item label="所属章节" prop="chapterId">
           <el-input v-model="form.chapterId" placeholder="请输入所属章节" />
@@ -252,9 +262,6 @@
         </el-form-item>
         <el-form-item label="学习中人数" prop="studying">
           <el-input v-model="form.studying" placeholder="请输入学习中人数" />
-        </el-form-item>
-        <el-form-item label="未学习人数" prop="nostudying">
-          <el-input v-model="form.nostudying" placeholder="请输入未学习人数" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -308,7 +315,6 @@ export default {
         totalScore: null,
         completed: null,
         studying: null,
-        nostudying: null,
         status: null,
       },
       // 表单参数
@@ -355,7 +361,6 @@ export default {
         title: null,
         path: null,
         size: null,
-        userId: null,
         isDownload: null,
         type: null,
         typeLabel: null,
@@ -367,7 +372,6 @@ export default {
         totalScore: null,
         completed: null,
         studying: null,
-        nostudying: null,
         status: null,
         createBy: null,
         createTime: null,

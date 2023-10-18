@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 测试管理对象 tb_test
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
@@ -54,12 +54,12 @@ public class Test extends BaseEntity
 
     /** 发布时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "发布时间", width = 30, dateFormat = "YYYY-MM-DD HH:mm:ss")
     private Date publishDate;
 
     /** 截至时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "截至时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "截至时间", width = 30, dateFormat = "YYYY-MM-DD HH:mm:ss")
     private Date deadline;
 
     /** 总分 */
@@ -78,138 +78,138 @@ public class Test extends BaseEntity
     @Excel(name = "int	状态，0禁用，1激活")
     private Long status;
 
-    public void setTestId(Long testId) 
+    public void setTestId(Long testId)
     {
         this.testId = testId;
     }
 
-    public Long getTestId() 
+    public Long getTestId()
     {
         return testId;
     }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }
 
-    public String getTitle() 
+    public String getTitle()
     {
         return title;
     }
-    public void setContent(String content) 
+    public void setContent(String content)
     {
         this.content = content;
     }
 
-    public String getContent() 
+    public String getContent()
     {
         return content;
     }
-    public void setUserId(Long userId) 
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }
 
-    public Long getUserId() 
+    public Long getUserId()
     {
         return userId;
     }
-    public void setTestLabel(String testLabel) 
+    public void setTestLabel(String testLabel)
     {
         this.testLabel = testLabel;
     }
 
-    public String getTestLabel() 
+    public String getTestLabel()
     {
         return testLabel;
     }
-    public void setTypeLabel(String typeLabel) 
+    public void setTypeLabel(String typeLabel)
     {
         this.typeLabel = typeLabel;
     }
 
-    public String getTypeLabel() 
+    public String getTypeLabel()
     {
         return typeLabel;
     }
-    public void setShareProtocol(String shareProtocol) 
+    public void setShareProtocol(String shareProtocol)
     {
         this.shareProtocol = shareProtocol;
     }
 
-    public String getShareProtocol() 
+    public String getShareProtocol()
     {
         return shareProtocol;
     }
-    public void setProcess(String process) 
+    public void setProcess(String process)
     {
         this.process = process;
     }
 
-    public String getProcess() 
+    public String getProcess()
     {
         return process;
     }
-    public void setChapterId(Long chapterId) 
+    public void setChapterId(Long chapterId)
     {
         this.chapterId = chapterId;
     }
 
-    public Long getChapterId() 
+    public Long getChapterId()
     {
         return chapterId;
     }
-    public void setPublishDate(Date publishDate) 
+    public void setPublishDate(Date publishDate)
     {
         this.publishDate = publishDate;
     }
 
-    public Date getPublishDate() 
+    public Date getPublishDate()
     {
         return publishDate;
     }
-    public void setDeadline(Date deadline) 
+    public void setDeadline(Date deadline)
     {
         this.deadline = deadline;
     }
 
-    public Date getDeadline() 
+    public Date getDeadline()
     {
         return deadline;
     }
-    public void setTotalScore(Long totalScore) 
+    public void setTotalScore(Long totalScore)
     {
         this.totalScore = totalScore;
     }
 
-    public Long getTotalScore() 
+    public Long getTotalScore()
     {
         return totalScore;
     }
-    public void setCorrrcted(Long corrrcted) 
+    public void setCorrrcted(Long corrrcted)
     {
         this.corrrcted = corrrcted;
     }
 
-    public Long getCorrrcted() 
+    public Long getCorrrcted()
     {
         return corrrcted;
     }
-    public void setUnpaid(Long unpaid) 
+    public void setUnpaid(Long unpaid)
     {
         this.unpaid = unpaid;
     }
 
-    public Long getUnpaid() 
+    public Long getUnpaid()
     {
         return unpaid;
     }
-    public void setStatus(Long status) 
+    public void setStatus(Long status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public Long getStatus()
     {
         return status;
     }

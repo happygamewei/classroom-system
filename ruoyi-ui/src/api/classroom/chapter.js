@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询章节列表
+// 查询目录列表
 export function listChapter(query) {
   return request({
     url: '/classroom/chapter/list',
@@ -9,7 +9,7 @@ export function listChapter(query) {
   })
 }
 
-// 查询章节详细
+// 查询目录详细
 export function getChapter(chapterId) {
   return request({
     url: '/classroom/chapter/' + chapterId,
@@ -17,7 +17,7 @@ export function getChapter(chapterId) {
   })
 }
 
-// 新增章节
+// 新增目录
 export function addChapter(data) {
   return request({
     url: '/classroom/chapter',
@@ -26,7 +26,7 @@ export function addChapter(data) {
   })
 }
 
-// 修改章节
+// 修改目录
 export function updateChapter(data) {
   return request({
     url: '/classroom/chapter',
@@ -35,7 +35,7 @@ export function updateChapter(data) {
   })
 }
 
-// 删除章节
+// 删除目录
 export function delChapter(chapterId) {
   return request({
     url: '/classroom/chapter/' + chapterId,
