@@ -3,6 +3,7 @@ package com.ruoyi.classroom.domain.vo;
 import com.ruoyi.classroom.domain.Comment;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,8 +15,5 @@ import java.util.List;
 public class CommentVo extends Comment {
     private int isDelete;
     private Long rootParentId;
-    private List<Comment> child;
-
-
-
+    private List<CommentVo> child;
 }

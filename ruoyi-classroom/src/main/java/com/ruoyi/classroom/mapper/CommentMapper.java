@@ -61,4 +61,7 @@ public interface CommentMapper
 
     List<Comment> findCommentsByCommentIds(List<Long> commentIds);
     public  Long getLastId();
+    public List<Comment> replyComment(Long parentId);
+    public int updateLikesNumber(Long commentId);
+    public int reduceLikesNumber(Long commentId);
 }

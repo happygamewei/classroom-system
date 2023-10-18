@@ -127,7 +127,7 @@ public class CommentServiceImpl implements ICommentService {
             int resultNum = commentMapper.deleteCommentByCommentId(cur.getCommentId());
             if (resultNum <= 0) return false;
             if (cur.getChild() != null) {
-                List<Comment> child = cur.getChild();
+                List<CommentVo> child = cur.getChild();
                 for (Comment tmp : child)
                     queue.offer((CommentVo) tmp);
             }

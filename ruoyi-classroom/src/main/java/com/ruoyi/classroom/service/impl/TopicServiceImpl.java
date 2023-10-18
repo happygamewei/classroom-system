@@ -367,9 +367,9 @@ public class TopicServiceImpl implements ITopicService {
             Long id = commentVo.getParentId();
             if (id != 0) {
                 CommentVo p = map.get(id);
-                if (p.getChlid() == null)
-                    p.setChlid(new ArrayList<>());
-                p.getChlid().add(commentVo);
+                if (p.getChild() == null)
+                    p.setChild(new ArrayList<>());
+                p.getChild().add(commentVo);
             }
         }
         System.out.println("树形结构为：" + result);
@@ -386,8 +386,8 @@ public class TopicServiceImpl implements ITopicService {
             CommentVo commentVo1 = queue.poll();
             result = commentMapper.deleteCommentByCommentId(commentVo1.getCommentId());
             commentContentMapper.deleteByCommentId(commentVo1.getCommentId());
-            if (commentVo1.getChlid() != null) {
-                List<CommentVo> child = commentVo1.getChlid();
+            if (commentVo1.getChild() != null) {
+                List<CommentVo> child = commentVo1.getChild();
                 for (CommentVo tmp : child) {
                     queue.offer(tmp);
                 }

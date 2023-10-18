@@ -3,15 +3,12 @@ package com.ruoyi.classroom.service;
 import java.util.List;
 
 import com.ruoyi.classroom.domain.Chapter;
-import com.ruoyi.classroom.domain.ChapterContent;
 import com.ruoyi.classroom.domain.Comment;
 import com.ruoyi.classroom.domain.Topic;
 import com.ruoyi.classroom.domain.vo.ChapterVo;
 import com.ruoyi.classroom.domain.vo.CommentVo;
 import com.ruoyi.classroom.domain.vo.TopicVo;
 import com.ruoyi.common.core.domain.entity.SysUser;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.security.core.userdetails.User;
 
 /**
  * 话题Service接口
