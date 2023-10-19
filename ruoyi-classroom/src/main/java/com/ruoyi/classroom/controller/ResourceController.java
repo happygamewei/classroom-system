@@ -34,6 +34,12 @@ public class ResourceController extends BaseController
     @Autowired
     private IResourceService resourceService;
 
+
+//    @GetMapping("/byCourseId/{courseId}")
+//    public AjaxResult getChapterByCourseId(@PathVariable("courseId") Long courseId){
+//        return success(resourceService.getResourceByCourseId(courseId));
+//    }
+
     /**
      * 查询资料管理列表
      */
@@ -101,4 +107,13 @@ public class ResourceController extends BaseController
     {
         return toAjax(resourceService.deleteResourceByResourceIds(resourceIds));
     }
+
+    /**
+     * 通过课程ID获取资料列表
+     */
+    @GetMapping("/byCourseId/{courseId}")
+    public AjaxResult getResourceByCourseId(@PathVariable("courseId") long courseId){
+        return success(resourceService.getResourceByCourseId(courseId));
+    }
+
 }

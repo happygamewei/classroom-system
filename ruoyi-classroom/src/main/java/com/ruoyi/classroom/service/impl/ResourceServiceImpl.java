@@ -1,6 +1,12 @@
 package com.ruoyi.classroom.service.impl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ruoyi.classroom.domain.CourseChapter;
+import com.ruoyi.classroom.mapper.CourseChapterMapper;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +25,9 @@ public class ResourceServiceImpl implements IResourceService
 {
     @Autowired
     private ResourceMapper resourceMapper;
+
+    @Autowired
+    private CourseChapterMapper courseChapterMapper;
 
     /**
      * 查询资料管理
@@ -92,5 +101,16 @@ public class ResourceServiceImpl implements IResourceService
     public int deleteResourceByResourceId(Long resourceId)
     {
         return resourceMapper.deleteResourceByResourceId(resourceId);
+    }
+
+    @Override
+    public List<Resource> getResourceByCourseId(Long courseId) {
+        //查询课程章节关系
+        List<CourseChapter> courseChapters = courseChapterMapper.selectChaptersByCourserId(courseId);
+        //根据章节查询资料
+        Long[] chapterIds = courseChapters.stream().map(CourseChapter::getChapterId).collect(Collectors.toList()).toArray(new Long[0]);
+        System.out.println(chapterIds);
+        List<Resource> resourceList = resourceMapper.getResourceByChapterId(chapterIds);
+        return resourceList;
     }
 }

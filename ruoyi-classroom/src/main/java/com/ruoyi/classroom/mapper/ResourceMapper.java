@@ -2,6 +2,7 @@ package com.ruoyi.classroom.mapper;
 
 import java.util.List;
 import com.ruoyi.classroom.domain.Resource;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 资料管理Mapper接口
@@ -58,4 +59,11 @@ public interface ResourceMapper
      * @return 结果
      */
     public int deleteResourceByResourceIds(Long[] resourceIds);
+
+    /**
+     * 通过课程ID查询到章节ID，再通过章节ID查询到资料
+     * @param chapterIds
+     * @return
+     */
+    List<Resource> getResourceByChapterId(Long[] chapterIds);
 }

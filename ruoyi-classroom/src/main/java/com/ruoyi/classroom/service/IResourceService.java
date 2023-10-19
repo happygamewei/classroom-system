@@ -58,4 +58,12 @@ public interface IResourceService
      * @return 结果
      */
     public int deleteResourceByResourceId(Long resourceId);
+
+    /**
+     * 获取资料通过courseId
+     * @param courseId
+     * @return
+     */
+
+    public List<Resource> getResourceByCourseId(Long courseId);
 }

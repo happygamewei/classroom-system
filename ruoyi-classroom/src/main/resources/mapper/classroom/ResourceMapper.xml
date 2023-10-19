@@ -131,7 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="completed != null">completed = #{completed},</if>
             <if test="studying != null">studying = #{studying},</if>
             <if test="nostudying != null">nostudying = #{nostudying},</if>
-            <if test="status != null">status = #{status},</if>
+            <if test="status != null">status = #{status},</if>s
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
@@ -150,4 +150,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{resourceId}
         </foreach>
     </delete>
+
+    <select id="getResourceByChapterId" parameterType="String" resultMap="ResourceResult">
+        select * from tb_resource where chapter_id in
+        <foreach item="chapterId" collection="array" open="(" separator="," close=")">
+        #{chapterId}
+        </foreach>
+    </select>
 </mapper>
