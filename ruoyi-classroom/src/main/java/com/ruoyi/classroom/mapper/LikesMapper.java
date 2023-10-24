@@ -63,5 +63,8 @@ public interface LikesMapper
     public  String selectType(@Param("userId") Long userId, @Param("commentId") Long commentId);
     public  int updateType(@Param("userId") Long userId, @Param("commentId") Long commentId);
     public  int updateType2(@Param("userId") Long userId, @Param("commentId") Long commentId);
+    public int deleteByCommentIdInt(Long commentId);
+    public int deleteByCommentIds(Long [] commentIds);
+    public  int deleteLikesByCommentId(Long commentId);
 
 }

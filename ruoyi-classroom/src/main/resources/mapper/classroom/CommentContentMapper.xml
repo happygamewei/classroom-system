@@ -49,6 +49,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = '3' and content_id=#{noticeId}</if>
         </where>
     </select>
+    <select id="selectCommentIdByContentId" resultType="Long">
+        select comment_id from tb_comment_content where content_id=#{topicId} and type='4'
+    </select>
 
 
     <insert id="insertCommentContent" parameterType="CommentContent">
@@ -87,7 +90,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    <delete id="deleteByCommentId">
+    <delete id="deleteByCommentId"  >
         delete from tb_comment_content where comment_id =#{commentId}
+    </delete>
+    <delete id="deleteByContentId">
+        delete from tb_comment_content where content_id =#{topicId} and type='4'
     </delete>
 </mapper>

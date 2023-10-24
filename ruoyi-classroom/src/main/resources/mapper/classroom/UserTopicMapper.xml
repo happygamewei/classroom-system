@@ -109,4 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{userTopicId}
         </foreach>
     </delete>
+    <delete id="deleteByTopicId">
+        delete  from tb_user_topic where topic_id=#{topicId}
+    </delete>
 </mapper>

@@ -23,5 +23,6 @@ public class TopicVo implements Serializable {
     private Long likeCount;
     private Long totalScore;
     private Long leastReplyNumber;
+    private  String chapterName;
 
 }

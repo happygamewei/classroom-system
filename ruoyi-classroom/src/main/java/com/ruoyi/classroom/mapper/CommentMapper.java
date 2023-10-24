@@ -33,7 +33,7 @@ public interface CommentMapper
      * @param comment 评论管理
      * @return 结果
      */
-    public int insertComment(Comment comment);
+    public Long insertComment(Comment comment);
 
     /**
      * 修改评论管理

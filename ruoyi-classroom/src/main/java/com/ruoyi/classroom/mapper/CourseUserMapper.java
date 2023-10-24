@@ -75,4 +75,5 @@ public interface CourseUserMapper
      * @return
      */
     List<CourseUser> selectCourseUserByUserId(Long userId);
+    List<Long> selectUserIdByCourseId(Long courseId);
 }

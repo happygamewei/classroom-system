@@ -7,6 +7,7 @@ import com.ruoyi.classroom.domain.Comment;
 import com.ruoyi.classroom.domain.Topic;
 import com.ruoyi.classroom.domain.vo.ChapterVo;
 import com.ruoyi.classroom.domain.vo.CommentVo;
+import com.ruoyi.classroom.domain.vo.TopicChapterNameVo;
 import com.ruoyi.classroom.domain.vo.TopicVo;
 import com.ruoyi.common.core.domain.entity.SysUser;
 
@@ -24,7 +25,7 @@ public interface ITopicService
      * @param topicId 话题主键
      * @return 话题
      */
-    public Topic selectTopicByTopicId(Long topicId);
+    public TopicChapterNameVo selectTopicByTopicId(Long topicId);
 
     /**
      * 查询话题列表
@@ -40,7 +41,7 @@ public interface ITopicService
      * @param topic 话题
      * @return 结果
      */
-    public void insertTopic(Topic topic,Long userId);
+    public void insertTopic(Long courseId,Topic topic,Long userId);
 
     /**
      * 修改话题
@@ -84,8 +85,7 @@ public interface ITopicService
      * @param topicId
      * @return
      */
-    public List<Comment> findContentsByTopic(Long topicId);
-    public List<Comment> replyComment(Long parentId);
+
     /**
      * 话题点赞
      * @param userId
@@ -93,7 +93,7 @@ public interface ITopicService
      */
     public void likeClick(Long userId,Long topicId);
     public Long noParticipation(Long courseId,Long topicId);
-    public void addTopicComment(Long userId,Long topicId,String comment,Long parentId);
+    public void addTopicComment(Long courseId,Long userId,Long topicId,String comment,Long parentId);
     public void isJoinTopic(Long userId,Long topicId);
     public List<Chapter> processChapters(Long courseId);
     public SysUser findUserByTopicId(Long topic);

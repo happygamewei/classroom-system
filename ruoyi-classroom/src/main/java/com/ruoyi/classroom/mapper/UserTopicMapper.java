@@ -65,5 +65,6 @@ public interface UserTopicMapper
     public int updateIsLikeInt2(Long userTopicId);
     public int updateIsReadLabelInt(Long userTopicId);
     public  Long findUserByTopicId(Long topicId);
+    public int deleteByTopicId(Long topicId);
 
 }

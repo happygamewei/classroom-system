@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.classroom.mapper.ChapterContentMapper">
-    
+
     <resultMap type="com.ruoyi.classroom.domain.ChapterContent" id="ChapterContentResult">
         <result property="id"    column="id"    />
         <result property="chapterId"    column="chapter_id"    />
@@ -17,13 +17,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectChapterContentList" parameterType="com.ruoyi.classroom.domain.ChapterContent" resultMap="ChapterContentResult">
         <include refid="selectChapterContentVo"/>
-        <where>  
+        <where>
             <if test="chapterId != null "> and chapter_id = #{chapterId}</if>
             <if test="contentId != null "> and content_id = #{contentId}</if>
             <if test="contentType != null  and contentType != ''"> and content_type = #{contentType}</if>
         </where>
     </select>
-    
+
     <select id="selectChapterContentById" parameterType="Long" resultMap="ChapterContentResult">
         <include refid="selectChapterContentVo"/>
         where id = #{id}
@@ -65,9 +65,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteChapterContentByIds" parameterType="String">
-        delete from tb_chapter_content where id in 
+        delete from tb_chapter_content where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+    <delete id="deleteByContentId">
+        delete from tb_chapter_content where content_id =#{topicId}
     </delete>
 </mapper>

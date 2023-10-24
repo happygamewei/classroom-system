@@ -5,10 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.ruoyi.classroom.domain.*;
-import com.ruoyi.classroom.domain.vo.ChapterVo;
-import com.ruoyi.classroom.domain.vo.CommentVo;
-import com.ruoyi.classroom.domain.vo.ContentVo;
-import com.ruoyi.classroom.domain.vo.TopicVo;
+import com.ruoyi.classroom.domain.vo.*;
 import com.ruoyi.classroom.mapper.*;
 import com.ruoyi.classroom.utils.ClassRoomConstants;
 import com.ruoyi.common.core.domain.entity.SysDictData;
@@ -54,7 +51,8 @@ public class TopicServiceImpl implements ITopicService {
     private ChapterContentMapper chapterContentMapper;
     @Autowired
     private SysDictDataMapper sysDictDataMapper;
-
+@Autowired
+private CourseUserMapper courseUserMapper;
     /**
      * 查询话题
      *
@@ -62,10 +60,12 @@ public class TopicServiceImpl implements ITopicService {
      * @return 话题
      */
     @Override
-    public Topic selectTopicByTopicId(Long topicId) {
-
-
-        return topicMapper.selectTopicByTopicId(topicId);
+    public TopicChapterNameVo selectTopicByTopicId(Long topicId) {
+            Topic topic=topicMapper.selectTopicByTopicId(topicId);
+            TopicChapterNameVo topicChapterNameVo=new TopicChapterNameVo();
+            BeanUtils.copyProperties(topic,topicChapterNameVo);
+            topicChapterNameVo.setChapterName(chapterMapper.selectChapterByChapterId(topic.getChapterId()).getName());
+            return topicChapterNameVo ;
     }
 
     /**
@@ -86,21 +86,27 @@ public class TopicServiceImpl implements ITopicService {
      * @return 结果
      */
     @Override
-    public void insertTopic(Topic topic, Long userId) {
-        System.out.println("共享协议："+topic.getShareProtocol());
+    public void insertTopic(Long courseId,Topic topic, Long userId) {
+
         topic.setCreateTime(DateUtils.getNowDate());
         topic.setCreateBy(SecurityUtils.getUsername());
         topic.setUserId(userId);
-        Long topicId = topicMapper.insertTopic(topic);
-        UserTopic userTopic = new UserTopic();
-        userTopic.setTopicId(topic.getTopicId());
-        userTopic.setUserId(userId);
-        userTopic.setCreateTime(DateUtils.getNowDate());
-        userTopic.setCreateBy(SecurityUtils.getUsername());
-        userTopicMapper.insertUserTopic(userTopic);
+        topicMapper.insertTopic(topic);
+        List<Long> userIds=courseUserMapper.selectUserIdByCourseId(courseId);
+        if (!userIds.isEmpty()){
+            userIds.forEach(user_id->{
+                System.out.println("用户id："+user_id);
+                UserTopic userTopic = new UserTopic();
+                userTopic.setTopicId(topic.getTopicId());
+                userTopic.setUserId(user_id);
+                userTopic.setCreateTime(DateUtils.getNowDate());
+                userTopic.setCreateBy(SecurityUtils.getUsername());
+                userTopicMapper.insertUserTopic(userTopic);
+            });
+        }
         ChapterContent chapterContent = new ChapterContent();
         chapterContent.setChapterId(topic.getChapterId());
-        chapterContent.setContentId(topicId);
+        chapterContent.setContentId(topic.getTopicId());
         chapterContent.setContentType("5");
         chapterContentMapper.insertChapterContent(chapterContent);
 
@@ -137,6 +143,17 @@ public class TopicServiceImpl implements ITopicService {
      */
     @Override
     public int deleteTopicByTopicId(Long topicId) {
+               userTopicMapper.deleteByTopicId(topicId);
+               Long []commentIds=commentContentMapper.selectCommentIdByContentId(topicId);
+               commentContentMapper.deleteByContentId(topicId);
+
+               if (commentIds.length!=0){
+
+                   commentMapper.deleteCommentByCommentIds(commentIds);
+                   likesMapper.deleteByCommentIds(commentIds);
+               }
+
+               chapterContentMapper.deleteByContentId(topicId);
         return topicMapper.deleteTopicByTopicId(topicId);
     }
 
@@ -152,7 +169,6 @@ public class TopicServiceImpl implements ITopicService {
         List<TopicVo> topicVos = new ArrayList<>();
         courseChapters.forEach(courseChapter -> {
             List<Topic> topics = topicMapper.findTopicByChapterId(courseChapter.getChapterId());
-            System.out.println(courseChapter.getChapterId()+"----"+topics);
             if (topics != null) {
                 topics.forEach(topic -> {
                     TopicVo topicVo = new TopicVo();
@@ -163,6 +179,7 @@ public class TopicServiceImpl implements ITopicService {
                     topicVo.setJoinNumber(topic.getJoinNumber());
                     topicVo.setNoJoinNumber(courseMapper.selectCourseByCourseId(courseId).getJoinNumber() - topic.getJoinNumber());
                     topicVo.setCommentCount(commentContentMapper.findContentCountByTopic(topic.getTopicId()).size());
+                    topicVo.setChapterName(chapterMapper.selectChapterByChapterId(courseChapter.getChapterId()).getName());
                     topicVos.add(topicVo);
                 });
 
@@ -185,41 +202,6 @@ public class TopicServiceImpl implements ITopicService {
         return commentContents.size();
     }
 
-    /**
-     * 查询该话题没有父节点的评论
-     *
-     * @param topicId
-     * @return
-     */
-    @Override
-    public List<Comment> findContentsByTopic(Long topicId) {
-        List<CommentContent> commentContents = commentContentMapper.findContentCountByTopic(topicId);
-        List<Comment> comments = new ArrayList<>();
-        for (int i = 0; i < commentContents.size(); i++) {
-            Comment comment = commentMapper.selectCommentByCommentId(commentContents.get(i).getCommentId());
-            if (comment.getParentId() == null) {
-                comments.add(comment);
-            }
-        }
-
-        return comments;
-    }
-
-    /**
-     * 查找属于该父评论的所有子评论
-     *
-     * @param parentId
-     * @return
-     */
-    @Override
-    public List<Comment> replyComment(Long parentId) {
-        List<Comment> comments = commentMapper.replyComment(parentId);
-        for (int i = 0; i < comments.size(); i++) {
-            if (comments.get(i).getParentId() == null)
-                comments.remove(i);
-        }
-        return comments;
-    }
 
     /**
      * 话题点赞
@@ -263,28 +245,25 @@ public class TopicServiceImpl implements ITopicService {
      * @param comment
      */
     @Override
-    public void addTopicComment(Long userId, Long topicId, String comment, Long parentId) {
-        List<Long> userIds = sysUserMapper.selectAllUserId();
-
-        Date date = new Date();
+    public void addTopicComment( Long courseId,Long userId, Long topicId, String comment, Long parentId) {
+        List<Long> userIds=courseUserMapper.selectUserIdByCourseId(courseId);
         Comment comment1 = new Comment();
         comment1.setContent(comment);
         comment1.setTypeId(userId);
-        comment1.setCreateTime(date);
-        comment1.setCreateBy("xushaofang");
-        comment1.setLikesNumber(0L);
+        comment1.setCreateTime(DateUtils.getNowDate());
+        comment1.setCreateBy(SecurityUtils.getUsername());
         if (parentId != null)
             comment1.setParentId(parentId);
         else
             comment1.setParentId(0L);
-        Long commentId = Long.valueOf(commentMapper.insertComment(comment1));
-        for (Long userId1 : userIds) {
-            Likes likes = new Likes();
-            likes.setCommentId(commentId);
-            likes.setType("0");
-            likes.setUserId(userId1);
-            likesMapper.insertLikes(likes);
-        }
+         commentMapper.insertComment(comment1);
+         userIds.forEach(user_id->{
+             Likes likes = new Likes();
+             likes.setCommentId(comment1.getCommentId());
+             likes.setType("0");
+             likes.setUserId(user_id);
+             likesMapper.insertLikes(likes);
+         });
         CommentContent commentContent = new CommentContent();
         commentContent.setCommentId(comment1.getCommentId());
         commentContent.setContentId(topicId);
@@ -338,42 +317,43 @@ public class TopicServiceImpl implements ITopicService {
 
     @Override
     public SysUser findUserByTopicId(Long topicId) {
-        Long userId = userTopicMapper.findUserByTopicId(topicId);
+        Long userId = topicMapper.selectTopicByTopicId(topicId).getUserId();
         return sysUserMapper.selectUserById(userId);
     }
 
     public List<CommentVo> processComments(Long topicId) {
         List<CommentContent> commentContents = commentContentMapper.findContentCountByTopic(topicId);
         List<Long> commentIds = commentContents.stream().map(CommentContent::getCommentId).collect(Collectors.toList());
-        List<Comment> comments = commentMapper.findCommentsByCommentIds(commentIds);
-        List<CommentVo> list = new ArrayList<>();
-        comments.stream().forEach(comment -> {
-            CommentVo commentVo = new CommentVo();
-            BeanUtils.copyProperties(comment, commentVo);
-            list.add(commentVo);
-        });
-        Map<Long, CommentVo> map = new HashMap<>();
         List<CommentVo> result = new ArrayList<>();
-        //将所有根评论加入map
-        for (CommentVo commentVo : list) {
-            map.put(commentVo.getCommentId(), commentVo);
-            if (commentVo.getParentId() == 0)
-                result.add(commentVo);
+        if(!commentIds.isEmpty()){
+            List<Comment> comments = commentMapper.findCommentsByCommentIds(commentIds);
+            List<CommentVo> list = new ArrayList<>();
+            comments.stream().forEach(comment -> {
+                CommentVo commentVo = new CommentVo();
+                BeanUtils.copyProperties(comment, commentVo);
+                list.add(commentVo);
+            });
+            Map<Long, CommentVo> map = new HashMap<>();
 
-        }
+            //将所有根评论加入map
+            for (CommentVo commentVo : list) {
+                map.put(commentVo.getCommentId(), commentVo);
+                if (commentVo.getParentId() == 0)
+                    result.add(commentVo);
+            }
 
-        //将子评论加入到父评论的child中
-        for (CommentVo commentVo : list) {
-            Long id = commentVo.getParentId();
-            if (id != 0) {
-                CommentVo p = map.get(id);
-                if (p.getChild() == null)
-                    p.setChild(new ArrayList<>());
-                p.getChild().add(commentVo);
+            //将子评论加入到父评论的child中
+            for (CommentVo commentVo : list) {
+                Long id = commentVo.getParentId();
+                if (id != 0) {
+                    CommentVo p = map.get(id);
+                    if (p.getChild() == null)
+                        p.setChild(new ArrayList<>());
+                    p.getChild().add(commentVo);
+
+                }
             }
         }
-        System.out.println("树形结构为：" + result);
-
         return result;
     }
 
@@ -386,6 +366,7 @@ public class TopicServiceImpl implements ITopicService {
             CommentVo commentVo1 = queue.poll();
             result = commentMapper.deleteCommentByCommentId(commentVo1.getCommentId());
             commentContentMapper.deleteByCommentId(commentVo1.getCommentId());
+            likesMapper.deleteLikesByCommentId(commentVo.getCommentId());
             if (commentVo1.getChild() != null) {
                 List<CommentVo> child = commentVo1.getChild();
                 for (CommentVo tmp : child) {

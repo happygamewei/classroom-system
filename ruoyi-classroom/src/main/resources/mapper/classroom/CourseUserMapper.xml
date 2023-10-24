@@ -50,6 +50,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             where user_id=#{user_id}
         </if>
     </select>
+    <select id="selectUserIdByCourseId" resultType="java.lang.Long">
+        select user_id from tb_course_user where course_id=#{courseId}
+    </select>
 
     <insert id="insertCourseUser" parameterType="com.ruoyi.classroom.domain.CourseUser" useGeneratedKeys="true" keyProperty="id">
         insert into tb_course_user

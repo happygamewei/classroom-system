@@ -66,5 +66,7 @@ public interface ChapterContentMapper
      */
     List<ChapterContent> selectByChapterId(Long chapterId);
 
+    int deleteByContentId(Long topicId);
+
 
 }

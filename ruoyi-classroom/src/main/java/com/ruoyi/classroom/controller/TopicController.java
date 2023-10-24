@@ -77,11 +77,11 @@ public class TopicController extends BaseController
      */
     //@PreAuthorize("@ss.hasPermi('classroom:topic:add')")
     //@Log(title = "话题", businessType = BusinessType.INSERT)
-    @PostMapping("/{userId}")
-    public void add(@PathVariable Long userId,@RequestBody Topic topic)
+    @PostMapping("/{courseId}/{userId}")
+    public void add(@PathVariable Long courseId,@PathVariable Long userId,@RequestBody Topic topic)
     {
-        System.out.println("话题："+topic);
-        topicService.insertTopic(topic,userId);
+        System.out.println("话题------："+topic);
+        topicService.insertTopic(courseId,topic,userId);
     }
 
     /**
@@ -92,7 +92,7 @@ public class TopicController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Topic topic)
     {
-        System.out.println("修改之后的话题："+topic);
+
 
         return toAjax(topicService.updateTopic(topic));
     }
@@ -146,7 +146,7 @@ public class TopicController extends BaseController
     }
 
     /**
-     * 返回该话题的没有父节点评论的内容
+     * 返回该话题的所有评论
      * @param topicId
      * @return
      */
@@ -154,12 +154,10 @@ public class TopicController extends BaseController
 
     @GetMapping("/getAllComments/{topicid}")
     public AjaxResult findCommentsByTopic(@PathVariable("topicid") Long topicId){
+
         return success(topicService.processComments(topicId));
     }
-    @GetMapping("/replyComment/{parentId}")
-   public  AjaxResult replyComment(@PathVariable Long parentId){
-          return success(topicService.replyComment(parentId));
-   }
+
     /**
      * 返回未参与的数量
      * @param courseId
@@ -179,10 +177,10 @@ public class TopicController extends BaseController
      * @param topicId
      * @param comment
      */
-    @PostMapping("/addTopicComment/{userId}/{topicId}/{comment}")
-    public void addTopicComment(@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment){
+    @PostMapping("/addTopicComment/{courseId}/{userId}/{topicId}/{comment}")
+    public void addTopicComment(@PathVariable Long courseId,@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment){
         Long parentId=null;
-        topicService.addTopicComment(userId,topicId,comment,parentId);
+        topicService.addTopicComment(courseId,userId,topicId,comment,parentId);
 
     }
 
@@ -193,10 +191,10 @@ public class TopicController extends BaseController
      * @param comment
      * @param parentId
      */
-    @PostMapping("/addTopicReplyComment/{userId}/{topicId}/{comment}/{parentId}")
-    public void addTopicReplyComment(@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment,@PathVariable("parentId")Long parentId){
-
-        topicService.addTopicComment(userId,topicId,comment,parentId);
+    @PostMapping("/addTopicReplyComment/{courseId}/{userId}/{topicId}/{comment}/{parentId}")
+    public void addTopicReplyComment(@PathVariable Long courseId,@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment,@PathVariable("parentId")Long parentId){
+        System.out.println(userId+","+topicId+","+comment+","+parentId);
+        topicService.addTopicComment(courseId,userId,topicId,comment,parentId);
 
     }
     /**
@@ -226,7 +224,7 @@ public class TopicController extends BaseController
      */
     @GetMapping("/getAllChapter/{courseId}")
     public AjaxResult getAllChapterByCourseId(@PathVariable Long courseId){
-        System.out.println("所有章节信息："+topicService.processChapters(courseId));
+
            return  success(topicService.processChapters(courseId));
     }
 
@@ -253,12 +251,13 @@ public class TopicController extends BaseController
 
     @PostMapping("/deleteComment")
     public AjaxResult deleteComment(@RequestBody CommentVo commentVo){
-        System.out.println("评论------："+commentVo);
+
         return success( topicService.deleteComment(commentVo)) ;
     }
     @GetMapping("/commentLikes/{userId}/{commentId}")
     public void CommentLikes(@PathVariable Long userId, @PathVariable Long commentId){
-       topicService.CommentLikes(userId,commentId);
+
+        topicService.CommentLikes(userId,commentId);
     }
     @GetMapping("/likeState/{userId}/{commentId}")
     public AjaxResult likeState(@PathVariable Long userId,@PathVariable Long commentId){

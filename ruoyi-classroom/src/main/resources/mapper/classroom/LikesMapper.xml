@@ -75,4 +75,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <delete id="deleteByCommentIdInt">
+        delete from tb_likes where comment_id=#{commentId}
+    </delete>
+    <delete id="deleteByCommentIds">
+        delete from tb_likes where comment_id in
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+    <delete id="deleteLikesByCommentId">
+        delete from tb_likes where comment_id =#{commentId}
+    </delete>
 </mapper>
