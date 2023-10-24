@@ -85,9 +85,8 @@ public class NoticeController extends BaseController
     /**
      * 修改公告
      */
-    @PreAuthorize("@ss.hasPermi('classroom:notice:edit')")
-    @Log(title = "公告", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @CrossOrigin
+    @PostMapping("/edit")
     public AjaxResult edit(@RequestBody Notice notice)
     {
         return toAjax(noticeService.updateNotice(notice));
@@ -107,7 +106,6 @@ public class NoticeController extends BaseController
     {
         return success(noticeService.processComments(noticeId));
     }
-
 
 
 
