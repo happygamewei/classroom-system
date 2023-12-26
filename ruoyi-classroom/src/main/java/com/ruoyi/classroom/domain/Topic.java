@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 话题对象 tb_topic
- * 
+ *
  * @author Yuan
  * @date 2023-09-07
  */
@@ -50,7 +50,7 @@ public class Topic extends BaseEntity
     private Date publishDate;
 
     /** 截至时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Excel(name = "截至时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date deadline;
 
@@ -78,138 +78,138 @@ public class Topic extends BaseEntity
     @Excel(name = "用户id")
     private Long userId;
 
-    public void setTopicId(Long topicId) 
+    public void setTopicId(Long topicId)
     {
         this.topicId = topicId;
     }
 
-    public Long getTopicId() 
+    public Long getTopicId()
     {
         return topicId;
     }
-    public void setTitle(String title) 
+    public void setTitle(String title)
     {
         this.title = title;
     }
 
-    public String getTitle() 
+    public String getTitle()
     {
         return title;
     }
-    public void setContent(String content) 
+    public void setContent(String content)
     {
         this.content = content;
     }
 
-    public String getContent() 
+    public String getContent()
     {
         return content;
     }
-    public void setTypeLabel(String typeLabel) 
+    public void setTypeLabel(String typeLabel)
     {
         this.typeLabel = typeLabel;
     }
 
-    public String getTypeLabel() 
+    public String getTypeLabel()
     {
         return typeLabel;
     }
-    public void setShareProtocol(String shareProtocol) 
+    public void setShareProtocol(String shareProtocol)
     {
         this.shareProtocol = shareProtocol;
     }
 
-    public String getShareProtocol() 
+    public String getShareProtocol()
     {
         return shareProtocol;
     }
-    public void setProcess(String process) 
+    public void setProcess(String process)
     {
         this.process = process;
     }
 
-    public String getProcess() 
+    public String getProcess()
     {
         return process;
     }
-    public void setChapterId(Long chapterId) 
+    public void setChapterId(Long chapterId)
     {
         this.chapterId = chapterId;
     }
 
-    public Long getChapterId() 
+    public Long getChapterId()
     {
         return chapterId;
     }
-    public void setPublishDate(Date publishDate) 
+    public void setPublishDate(Date publishDate)
     {
         this.publishDate = publishDate;
     }
 
-    public Date getPublishDate() 
+    public Date getPublishDate()
     {
         return publishDate;
     }
-    public void setDeadline(Date deadline) 
+    public void setDeadline(Date deadline)
     {
         this.deadline = deadline;
     }
 
-    public Date getDeadline() 
+    public Date getDeadline()
     {
         return deadline;
     }
-    public void setTotalScore(Long totalScore) 
+    public void setTotalScore(Long totalScore)
     {
         this.totalScore = totalScore;
     }
 
-    public Long getTotalScore() 
+    public Long getTotalScore()
     {
         return totalScore;
     }
-    public void setLeastReplyNumber(Long leastReplyNumber) 
+    public void setLeastReplyNumber(Long leastReplyNumber)
     {
         this.leastReplyNumber = leastReplyNumber;
     }
 
-    public Long getLeastReplyNumber() 
+    public Long getLeastReplyNumber()
     {
         return leastReplyNumber;
     }
-    public void setJoinNumber(Long joinNumber) 
+    public void setJoinNumber(Long joinNumber)
     {
         this.joinNumber = joinNumber;
     }
 
-    public Long getJoinNumber() 
+    public Long getJoinNumber()
     {
         return joinNumber;
     }
-    public void setLikeCount(Long likeCount) 
+    public void setLikeCount(Long likeCount)
     {
         this.likeCount = likeCount;
     }
 
-    public Long getLikeCount() 
+    public Long getLikeCount()
     {
         return likeCount;
     }
-    public void setStatus(String status) 
+    public void setStatus(String status)
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public String getStatus()
     {
         return status;
     }
-    public void setUserId(Long userId) 
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }
 
-    public Long getUserId() 
+    public Long getUserId()
     {
         return userId;
     }

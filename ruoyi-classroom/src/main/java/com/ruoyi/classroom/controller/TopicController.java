@@ -80,7 +80,6 @@ public class TopicController extends BaseController
     @PostMapping("/{courseId}/{userId}")
     public void add(@PathVariable Long courseId,@PathVariable Long userId,@RequestBody Topic topic)
     {
-        System.out.println("话题------："+topic);
         topicService.insertTopic(courseId,topic,userId);
     }
 
@@ -193,7 +192,6 @@ public class TopicController extends BaseController
      */
     @PostMapping("/addTopicReplyComment/{courseId}/{userId}/{topicId}/{comment}/{parentId}")
     public void addTopicReplyComment(@PathVariable Long courseId,@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId,@PathVariable("comment") String comment,@PathVariable("parentId")Long parentId){
-        System.out.println(userId+","+topicId+","+comment+","+parentId);
         topicService.addTopicComment(courseId,userId,topicId,comment,parentId);
 
     }

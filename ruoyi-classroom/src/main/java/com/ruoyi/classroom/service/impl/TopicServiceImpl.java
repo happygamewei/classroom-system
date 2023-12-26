@@ -1,14 +1,11 @@
 package com.ruoyi.classroom.service.impl;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.ruoyi.classroom.domain.*;
 import com.ruoyi.classroom.domain.vo.*;
 import com.ruoyi.classroom.mapper.*;
-import com.ruoyi.classroom.utils.ClassRoomConstants;
-import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -16,7 +13,6 @@ import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import com.ruoyi.classroom.service.ITopicService;
 
@@ -87,7 +83,7 @@ private CourseUserMapper courseUserMapper;
      */
     @Override
     public void insertTopic(Long courseId,Topic topic, Long userId) {
-
+        System.out.println("新增话题："+courseId+","+topic+","+userId);
         topic.setCreateTime(DateUtils.getNowDate());
         topic.setCreateBy(SecurityUtils.getUsername());
         topic.setUserId(userId);
@@ -95,7 +91,6 @@ private CourseUserMapper courseUserMapper;
         List<Long> userIds=courseUserMapper.selectUserIdByCourseId(courseId);
         if (!userIds.isEmpty()){
             userIds.forEach(user_id->{
-                System.out.println("用户id："+user_id);
                 UserTopic userTopic = new UserTopic();
                 userTopic.setTopicId(topic.getTopicId());
                 userTopic.setUserId(user_id);
@@ -120,6 +115,7 @@ private CourseUserMapper courseUserMapper;
      */
     @Override
     public int updateTopic(Topic topic) {
+        System.out.println("修改直接截止时间："+topic.getDeadline());
         topic.setUpdateTime(DateUtils.getNowDate());
         return topicMapper.updateTopic(topic);
     }
@@ -174,8 +170,8 @@ private CourseUserMapper courseUserMapper;
                     TopicVo topicVo = new TopicVo();
                     topicVo.setTopicId(topic.getTopicId());
                     topicVo.setTitle(topic.getTitle());
-                    topicVo.setDeadline(topic.getDeadline());
                     topicVo.setPublishDate(topic.getPublishDate());
+                    topicVo.setDeadline(topic.getDeadline());
                     topicVo.setJoinNumber(topic.getJoinNumber());
                     topicVo.setNoJoinNumber(courseMapper.selectCourseByCourseId(courseId).getJoinNumber() - topic.getJoinNumber());
                     topicVo.setCommentCount(commentContentMapper.findContentCountByTopic(topic.getTopicId()).size());
@@ -186,7 +182,6 @@ private CourseUserMapper courseUserMapper;
 
             }
         });
-        System.out.println(topicVos);
         return topicVos;
     }
 
