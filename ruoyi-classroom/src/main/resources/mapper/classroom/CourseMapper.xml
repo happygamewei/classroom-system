@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="place"    column="place"    />
         <result property="institutional"    column="institutional"    />
         <result property="joinNumber"    column="join_number"    />
+        <result property="isTop"    column="is_top"    />
         <result property="isOver"    column="is_over"    />
         <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
@@ -31,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCourseVo">
-        select course_id, name, code, teach_class, school_year, term, teach_mode, credit_hours, introduce, place, institutional, join_number, is_over, status, create_by, create_time, update_by, update_time from tb_course
+        select course_id, name, code, teach_class, school_year, term, teach_mode, credit_hours, introduce, place, institutional, join_number, is_top, is_over, status, create_by, create_time, update_by, update_time from tb_course
     </sql>
 
     <select id="selectCourseList" parameterType="com.ruoyi.classroom.domain.Course" resultMap="CourseResult">
@@ -48,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="place != null  and place != ''"> and place = #{place}</if>
             <if test="institutional != null  and institutional != ''"> and institutional = #{institutional}</if>
             <if test="joinNumber != null "> and join_number = #{joinNumber}</if>
+            <if test="isTop != null  and isTop != ''"> and is_top = #{isTop}</if>
             <if test="isOver != null  and isOver != ''"> and is_over = #{isOver}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
@@ -70,6 +72,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourseVo"/>
         where code=#{code}
     </select>
+    <select id="selectTopByCourseId" resultType="java.lang.String" parameterType="Long">
+        select is_top from tb_course where course_id = #{courseId}
+    </select>
+    <select id="selectCourseByCourseIdTop" parameterType="Long" resultMap="CourseResult">
+        <include refid="selectCourseVo"/>
+        where course_id = #{courseId} and is_top = '1'
+    </select>
 
     <insert id="insertCourse" parameterType="com.ruoyi.classroom.domain.Course" useGeneratedKeys="true" keyProperty="courseId">
         insert into tb_course
@@ -86,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="place != null">place,</if>
             <if test="institutional != null">institutional,</if>
             <if test="joinNumber != null">join_number,</if>
+            <if test="isTop != null">is_top,</if>
             <if test="isOver != null">is_over,</if>
             <if test="status != null">status,</if>
             <if test="createBy != null and createBy != ''">create_by,</if>
@@ -106,6 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="place != null">#{place},</if>
             <if test="institutional != null">#{institutional},</if>
             <if test="joinNumber != null">#{joinNumber},</if>
+            <if test="isTop != null">#{is_top},</if>
             <if test="isOver != null">#{is_over},</if>
             <if test="status != null">#{status},</if>
             <if test="createBy != null and createBy != ''">#{createBy},</if>
@@ -129,6 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="place != null">place = #{place},</if>
             <if test="institutional != null">institutional = #{institutional},</if>
             <if test="joinNumber != null">join_number = #{joinNumber},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
             <if test="isOver != null">is_over = #{isOver},</if>
             <if test="status != null">status = #{status},</if>
             <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
@@ -149,6 +161,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
     <update id="openCourse" parameterType="Long">
         update tb_course set is_over = '0' where course_id = #{courseId}
+    </update>
+    <update id="updateCourseTop">
+        update tb_course set is_top = #{isTop} where course_id = #{courseId}
     </update>
 
     <delete id="deleteCourseByCourseId" parameterType="Long">

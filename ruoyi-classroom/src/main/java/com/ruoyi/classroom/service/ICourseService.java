@@ -111,4 +111,11 @@ public interface ICourseService
      * @return
      */
     int openCourse(Long courseId);
+
+    /**
+     * 置顶课程或取消置顶
+     * @param courseId
+     * @return
+     */
+    int cancelTopCourse(Long courseId, String isTop);
 }

@@ -64,6 +64,10 @@ public class Course extends BaseEntity
     @Excel(name = "参加人数")
     private Long joinNumber;
 
+    /** 是否置顶 */
+    @Excel(name = "是否置顶")
+    private String isTop;
+
     /** 是否结课 */
     @Excel(name = "是否结课")
     private String isOver;
@@ -185,6 +189,14 @@ public class Course extends BaseEntity
         return isOver;
     }
 
+    public String getIsTop() {
+        return isTop;
+    }
+
+    public void setIsTop(String isTop) {
+        this.isTop = isTop;
+    }
+
     public void setIsOver(String isOver) {
         this.isOver = isOver;
     }
@@ -214,6 +226,7 @@ public class Course extends BaseEntity
             .append("place", getPlace())
             .append("institutional", getInstitutional())
             .append("joinNumber", getJoinNumber())
+            .append("isTop", getIsTop())
             .append("isOver", getIsOver())
             .append("status", getStatus())
             .append("createBy", getCreateBy())

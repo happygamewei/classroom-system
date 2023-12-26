@@ -115,4 +115,25 @@ public interface CourseMapper
      * @return
      */
     int openCourse(Long courseId);
+
+    /**
+     * 查询课程是否置顶
+     * @param courseId
+     * @return
+     */
+    String selectTopByCourseId(Long courseId);
+
+    /**
+     * 置顶或不置顶
+     * @param courseId
+     * @param isTop
+     */
+    void updateCourseTop(@Param("courseId") long courseId, @Param("isTop") String isTop);
+
+    /**
+     * 查询置顶课程
+     * @param courseId
+     * @return
+     */
+    Course selectCourseByCourseIdTop(Long courseId);
 }

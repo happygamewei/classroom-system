@@ -191,7 +191,9 @@ public class CourseServiceImpl implements ICourseService
         List<Course> courseList = new ArrayList<>();
         courseUsers.forEach(courseUser -> {
             Course course = courseMapper.selectCourseByCourseId(courseUser.getCourseId());
-            courseList.add(course);
+            if(course != null){
+                courseList.add(course);
+            }
         });
 
         Map<String, List<Course>> groupedCourses = courseList.stream().collect(Collectors.groupingBy(
@@ -241,10 +243,12 @@ public class CourseServiceImpl implements ICourseService
         List<CourseVo> courseVoList = new ArrayList<>();
         courseUsers.forEach(courseUser -> {
             CourseVo courseVo = new CourseVo();
-            Course course = courseMapper.selectCourseByCourseId(courseUser.getCourseId());
-            BeanUtils.copyProperties(course, courseVo);
-            courseVo.setCourseType(courseUser.getType());
-            courseVoList.add(courseVo);
+            Course course = courseMapper.selectCourseByCourseIdTop(courseUser.getCourseId());
+            if(course != null){
+                BeanUtils.copyProperties(course, courseVo);
+                courseVo.setCourseType(courseUser.getType());
+                courseVoList.add(courseVo);
+            }
         });
         return courseVoList;
     }
@@ -278,5 +282,22 @@ public class CourseServiceImpl implements ICourseService
     @Override
     public int openCourse(Long courseId) {
         return courseMapper.openCourse(courseId);
+    }
+
+    /**
+     * 置顶课程或取消置顶
+     * @param courseId
+     * @return
+     */
+    @Override
+    public int cancelTopCourse(Long courseId, String isTop) {
+        System.out.println(courseId);
+        System.out.println(isTop);
+        if ("1".equals(isTop)){
+            courseMapper.updateCourseTop(courseId, "0");
+        }else {
+            courseMapper.updateCourseTop(courseId, "1");
+        }
+        return 1;
     }
 }
