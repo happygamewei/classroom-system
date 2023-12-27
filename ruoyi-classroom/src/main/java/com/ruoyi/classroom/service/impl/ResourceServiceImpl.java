@@ -67,13 +67,16 @@ public class ResourceServiceImpl implements IResourceService
     @Override
     public int insertResource(Resource resource)
     {
+        resource.setCreateTime(DateUtils.getNowDate());
+        int result = resourceMapper.insertResource(resource);
+        List<Resource> resources = resourceMapper.selectResourceList(resource);
+        resource = resources.get(0);
         ChapterContent chapterContent = new ChapterContent();
         chapterContent.setChapterId(resource.getChapterId());
         chapterContent.setContentId(resource.getResourceId());
         chapterContent.setContentType("3");
         chapterContentMapper.insertChapterContent(chapterContent);
-        resource.setCreateTime(DateUtils.getNowDate());
-        return resourceMapper.insertResource(resource);
+        return result;
     }
 
     /**
