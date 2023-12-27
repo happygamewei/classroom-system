@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ruoyi.classroom.domain.ChapterContent;
 import com.ruoyi.classroom.domain.CourseChapter;
+import com.ruoyi.classroom.mapper.ChapterContentMapper;
 import com.ruoyi.classroom.mapper.CourseChapterMapper;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class ResourceServiceImpl implements IResourceService
 
     @Autowired
     private CourseChapterMapper courseChapterMapper;
+
+    @Autowired
+    private ChapterContentMapper chapterContentMapper;
 
     /**
      * 查询资料管理
@@ -62,6 +67,11 @@ public class ResourceServiceImpl implements IResourceService
     @Override
     public int insertResource(Resource resource)
     {
+        ChapterContent chapterContent = new ChapterContent();
+        chapterContent.setChapterId(resource.getChapterId());
+        chapterContent.setContentId(resource.getResourceId());
+        chapterContent.setContentType("3");
+        chapterContentMapper.insertChapterContent(chapterContent);
         resource.setCreateTime(DateUtils.getNowDate());
         return resourceMapper.insertResource(resource);
     }
@@ -100,6 +110,7 @@ public class ResourceServiceImpl implements IResourceService
     @Override
     public int deleteResourceByResourceId(Long resourceId)
     {
+        chapterContentMapper.deleteChapterContentByResourceId(resourceId);
         return resourceMapper.deleteResourceByResourceId(resourceId);
     }
 

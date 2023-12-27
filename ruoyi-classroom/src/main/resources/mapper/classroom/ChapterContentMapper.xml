@@ -73,4 +73,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteByContentId">
         delete from tb_chapter_content where content_id =#{topicId}
     </delete>
+
+    <delete id="deleteChapterContentByResourceId" parameterType="Long">
+        delete from tb_chapter_content where content_id = #{resourceId}
+    </delete>
 </mapper>

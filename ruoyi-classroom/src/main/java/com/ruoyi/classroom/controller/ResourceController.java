@@ -102,7 +102,7 @@ public class ResourceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('classroom:resource:remove')")
     @Log(title = "资料管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{resourceIds}")
+	@DeleteMapping("/delete/{resourceIds}")
     public AjaxResult remove(@PathVariable Long[] resourceIds)
     {
         return toAjax(resourceService.deleteResourceByResourceIds(resourceIds));
@@ -116,4 +116,11 @@ public class ResourceController extends BaseController
         return success(resourceService.getResourceByCourseId(courseId));
     }
 
+    /**
+     * 删除资料
+     */
+    @DeleteMapping("/delete/{resourceId}")
+    public AjaxResult deleteResourceByResourceId(@PathVariable("resourceId") long resourceId){
+        return success(resourceService.deleteResourceByResourceId(resourceId));
+    }
 }

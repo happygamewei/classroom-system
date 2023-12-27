@@ -60,13 +60,13 @@ public class Resource extends BaseEntity
     private Long chapterId;
 
     /** 发布时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Excel(name = "发布时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm")
     private Date publishDate;
 
     /** 截至时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "截至时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @Excel(name = "截至时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm")
     private Date deadline;
 
     /** 总分 */

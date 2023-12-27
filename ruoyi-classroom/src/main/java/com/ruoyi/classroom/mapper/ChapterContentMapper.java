@@ -69,4 +69,10 @@ public interface ChapterContentMapper
     int deleteByContentId(Long topicId);
 
 
+    /**
+     * 根据资料id删除章节内容管理
+     * @param resourceId
+     * @return
+     */
+    public int deleteChapterContentByResourceId(Long resourceId);
 }
