@@ -117,5 +117,7 @@ public interface TestMapper
      */
     public int GetPaid(Long testId);
 
+    public int CheckRole(Integer user_id);
+
 
 }

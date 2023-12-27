@@ -106,6 +106,7 @@ public interface ITestService
      */
     public Test SelectTest(Long testId);
 
+    public int CheckRole(Integer UserId);
 
 
 }

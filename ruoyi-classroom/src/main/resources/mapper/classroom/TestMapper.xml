@@ -99,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+
     <update id="updateTest" parameterType="com.ruoyi.classroom.domain.Test">
         update tb_test
         <trim prefix="SET" suffixOverrides=",">
@@ -163,5 +164,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="SelectTest" parameterType="Long"  resultType="com.ruoyi.classroom.domain.Test">
         select * from tb_test where test_id = #{testId};
     </select>
+    <insert id="CheckRole">
+        select role_id from sys_user_role where user_id = #{user_id}
+    </insert>
 
 </mapper>
