@@ -7,9 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import com.ruoyi.classroom.domain.ChapterContent;
-import com.ruoyi.classroom.domain.CourseChapter;
-import com.ruoyi.classroom.domain.CourseUser;
+import com.ruoyi.classroom.domain.*;
 import com.ruoyi.classroom.domain.vo.CourseContentVo;
 import com.ruoyi.classroom.domain.vo.CourseTypeVo;
 import com.ruoyi.classroom.domain.vo.CourseVo;
@@ -18,21 +16,22 @@ import com.ruoyi.classroom.utils.ClassRoomConstants;
 import com.ruoyi.classroom.utils.RandomStringGenerator;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import net.sf.jsqlparser.statement.select.Top;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import com.ruoyi.classroom.domain.Course;
 import com.ruoyi.classroom.service.ICourseService;
 import org.springframework.util.ObjectUtils;
 
 /**
  * 课程管理Service业务层处理
- * 
+ *
  * @author Yuan
  * @date 2023-09-08
  */
 @Service
-public class CourseServiceImpl implements ICourseService 
+public class CourseServiceImpl implements ICourseService
 {
     @Autowired
     private CourseMapper courseMapper;
@@ -48,10 +47,19 @@ public class CourseServiceImpl implements ICourseService
 
     @Autowired
     private CourseUserMapper courseUserMapper;
-
+    @Autowired
+    private TopicMapper topicMapper;
+    @Autowired
+    private UserTopicMapper userTopicMapper;
+    @Autowired
+    private CommentContentMapper commentContentMapper;
+    @Autowired
+    private  CommentMapper commentMapper;
+    @Autowired
+    private LikesMapper likesMapper;
     /**
      * 查询课程管理
-     * 
+     *
      * @param courseId 课程管理主键
      * @return 课程管理
      */
@@ -63,7 +71,7 @@ public class CourseServiceImpl implements ICourseService
 
     /**
      * 查询课程管理列表
-     * 
+     *
      * @param course 课程管理
      * @return 课程管理
      */
@@ -75,7 +83,7 @@ public class CourseServiceImpl implements ICourseService
 
     /**
      * 新增课程管理
-     * 
+     *
      * @param course 课程管理
      * @return 结果
      */
@@ -104,7 +112,7 @@ public class CourseServiceImpl implements ICourseService
 
     /**
      * 修改课程管理
-     * 
+     *
      * @param course 课程管理
      * @return 结果
      */
@@ -117,7 +125,7 @@ public class CourseServiceImpl implements ICourseService
 
     /**
      * 批量删除课程管理
-     * 
+     *
      * @param courseIds 需要删除的课程管理主键
      * @return 结果
      */
@@ -129,7 +137,7 @@ public class CourseServiceImpl implements ICourseService
 
     /**
      * 删除课程管理信息
-     * 
+     *
      * @param courseId 课程管理主键
      * @return 结果
      */
@@ -227,6 +235,31 @@ public class CourseServiceImpl implements ICourseService
 
             // 给所加入的课程人数加1
             courseMapper.updateJoinNumber(courseId);
+            //给新加入课程用户与话题建立关系
+            List<CourseChapter> courseChapters=courseChapterMapper.findChapterByCourseById(courseId);
+            courseChapters.forEach((courseChapter -> {
+                List<Topic> topics=topicMapper.findTopicByChapterId(courseChapter.getChapterId());
+
+                topics.forEach(topic -> {
+                    //用户和话题建立关系
+                    UserTopic userTopic = new UserTopic();
+                    userTopic.setTopicId(topic.getTopicId());
+                    userTopic.setUserId(userId);
+                    userTopic.setCreateTime(DateUtils.getNowDate());
+                    userTopic.setCreateBy(SecurityUtils.getUsername());
+                    userTopicMapper.insertUserTopic(userTopic);
+                    //用户和评论建立关系
+                    Long []commentIds=commentContentMapper.selectCommentIdByContentId(topic.getTopicId());
+                    for (int i = 0; i <commentIds.length ; i++) {
+                        Likes likes=new Likes();
+                        likes.setType("0");
+                        likes.setCommentId(commentIds[i]);
+                        likes.setUserId(userId);
+                        likesMapper.insertLikes(likes);
+                    }
+                });
+                ;
+            }));
             return courseUserMapper.insertCourseUser(courseUser);
         }
         return -1;
