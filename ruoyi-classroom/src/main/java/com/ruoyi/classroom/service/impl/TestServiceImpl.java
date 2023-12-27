@@ -146,4 +146,9 @@ public class TestServiceImpl implements ITestService
     public Test SelectTest(Long testId) {
         return testMapper.SelectTest(testId);
     }
+
+    @Override
+    public int CheckRole(Integer UserId) {
+        return testMapper.CheckRole(UserId);
+    }
 }

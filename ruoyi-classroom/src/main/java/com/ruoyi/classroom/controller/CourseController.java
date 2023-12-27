@@ -30,6 +30,15 @@ public class CourseController extends BaseController
     @Autowired
     private ICourseService courseService;
 
+    /**
+     * 退课
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/exit/{courseId}")
+    public AjaxResult exitCourse(@PathVariable Long courseId){
+        return toAjax(courseService.exitCourse(courseId));
+    }
 
     /**
      * 取消置顶

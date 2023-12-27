@@ -76,4 +76,11 @@ public interface CourseUserMapper
      */
     List<CourseUser> selectCourseUserByUserId(Long userId);
     List<Long> selectUserIdByCourseId(Long courseId);
+
+    /**
+     * 退课
+     * @param courseId
+     * @return
+     */
+    int exitCourse(@Param("courseId") Long courseId, @Param("userId") Long userId);
 }

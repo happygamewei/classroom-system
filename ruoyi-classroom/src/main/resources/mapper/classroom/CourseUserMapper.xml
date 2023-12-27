@@ -90,4 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <delete id="exitCourse">
+        delete from tb_course_user where course_id = #{courseId} and user_id = #{userId}
+    </delete>
 </mapper>

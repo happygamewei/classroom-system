@@ -167,4 +167,9 @@ public class MTestController extends BaseController
         return testService.SelectTest(testId);
     }
 
+    @GetMapping("/CheckRole")
+    public int CheckRole(Integer UserId){
+        return testService.CheckRole(UserId);
+    }
+
 }
