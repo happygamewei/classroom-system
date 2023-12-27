@@ -118,4 +118,11 @@ public interface ICourseService
      * @return
      */
     int cancelTopCourse(Long courseId, String isTop);
+
+    /**
+     * 退课
+     * @param courseId
+     * @return
+     */
+    int exitCourse(Long courseId);
 }

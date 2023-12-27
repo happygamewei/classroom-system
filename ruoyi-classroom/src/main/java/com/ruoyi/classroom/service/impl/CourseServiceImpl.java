@@ -324,13 +324,22 @@ public class CourseServiceImpl implements ICourseService
      */
     @Override
     public int cancelTopCourse(Long courseId, String isTop) {
-        System.out.println(courseId);
-        System.out.println(isTop);
         if ("1".equals(isTop)){
             courseMapper.updateCourseTop(courseId, "0");
         }else {
             courseMapper.updateCourseTop(courseId, "1");
         }
         return 1;
+    }
+
+    /**
+     * 退课
+     * @param courseId
+     * @return
+     */
+    @Override
+    public int exitCourse(Long courseId) {
+        Long userId = SecurityUtils.getUserId();
+        return courseUserMapper.exitCourse(courseId, userId);
     }
 }

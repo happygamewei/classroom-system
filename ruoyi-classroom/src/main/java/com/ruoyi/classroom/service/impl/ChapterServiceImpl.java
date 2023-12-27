@@ -98,8 +98,10 @@ public class ChapterServiceImpl implements IChapterService
         List<CourseChapter> courseChapters = courseChapterMapper.selectChaptersByCourserId(courseId);
         AtomicInteger atomicInteger = new AtomicInteger(0);
         courseChapters.forEach(courseChapter -> {
-            Integer allocatedCredit = chapterMapper.selectCreditHoursByCourseId(courseChapter.getCourseId());
-            atomicInteger.addAndGet(allocatedCredit);
+            Integer allocatedCredit = chapterMapper.selectCreditHoursByCourseId(courseChapter.getChapterId());
+            if(allocatedCredit != null){
+                atomicInteger.addAndGet(allocatedCredit);
+            }
         });
         if(creditHours + atomicInteger.get() > allCredit){
             throw new RuntimeException("所添加的学时数已经超过了课程的学时数");
