@@ -50,7 +50,7 @@ public class Topic extends BaseEntity
     private Date publishDate;
 
     /** 截至时间 */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Excel(name = "截至时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date deadline;
 

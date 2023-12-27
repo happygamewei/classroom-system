@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.classroom.service.ITopicService;
+import com.ruoyi.framework.web.service.SysPermissionService;
 
 /**
  * 话题Service业务层处理
@@ -47,6 +48,8 @@ public class TopicServiceImpl implements ITopicService {
     private ChapterContentMapper chapterContentMapper;
     @Autowired
     private SysDictDataMapper sysDictDataMapper;
+    @Autowired
+    private SysPermissionService sysPermissionService;
 @Autowired
 private CourseUserMapper courseUserMapper;
     /**
@@ -166,6 +169,14 @@ private CourseUserMapper courseUserMapper;
             List<Topic> topics = topicMapper.findTopicByChapterId(courseChapter.getChapterId());
             if (topics != null) {
                 topics.forEach(topic -> {
+                    SysUser sysUser=sysUserMapper.selectUserById(topic.getUserId());
+                    Set<String> roles=sysPermissionService.getRolePermission(sysUser);
+                    String topic_user_role = "";
+                    for (String role:roles){
+                        topic_user_role=role;
+                    }
+
+                    System.out.println("用户橘色："+topic_user_role);
                     TopicVo topicVo = new TopicVo();
                     topicVo.setTopicId(topic.getTopicId());
                     topicVo.setTitle(topic.getTitle());
@@ -175,6 +186,7 @@ private CourseUserMapper courseUserMapper;
                     topicVo.setNoJoinNumber(courseMapper.selectCourseByCourseId(courseId).getJoinNumber() - topic.getJoinNumber());
                     topicVo.setCommentCount(commentContentMapper.findContentCountByTopic(topic.getTopicId()).size());
                     topicVo.setChapterName(chapterMapper.selectChapterByChapterId(courseChapter.getChapterId()).getName());
+                    topicVo.setTopic_user_role(topic_user_role);
                     topicVos.add(topicVo);
                 });
 

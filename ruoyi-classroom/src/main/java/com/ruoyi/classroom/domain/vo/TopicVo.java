@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +26,6 @@ public class TopicVo implements Serializable {
     private Long totalScore;
     private Long leastReplyNumber;
     private  String chapterName;
+    private String topic_user_role;
 
 }
