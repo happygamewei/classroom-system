@@ -212,6 +212,7 @@ public class TopicController extends BaseController
      */
     @PostMapping("/isJoinTopic/{userId}/{topicId}")
     public void isJoinTopic(@PathVariable("userId") Long userId,@PathVariable("topicId") Long topicId){
+        System.out.println("是否阅读？"+userId+"..."+topicId);
     topicService.isJoinTopic(userId,topicId);
     }
 

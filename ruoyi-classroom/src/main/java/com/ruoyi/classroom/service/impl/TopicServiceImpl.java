@@ -115,7 +115,6 @@ private CourseUserMapper courseUserMapper;
      */
     @Override
     public int updateTopic(Topic topic) {
-        System.out.println("修改直接截止时间："+topic.getDeadline());
         topic.setUpdateTime(DateUtils.getNowDate());
         return topicMapper.updateTopic(topic);
     }
@@ -208,6 +207,7 @@ private CourseUserMapper courseUserMapper;
     public void likeClick(Long userId, Long topicId) {
         //首先先判断用户是否之前已经点赞过了该话题
         UserTopic userTopic = userTopicMapper.findByTopicId(userId, topicId);
+        System.out.println("用户点赞："+userTopic);
         if (userTopic.getIsLike() != null && userTopic.getIsLike().equals("0")) {
             topicMapper.updateLikeCount(topicId);
             userTopicMapper.updateIsLikeInt2(userTopic.getUserTopicId());
@@ -275,8 +275,10 @@ private CourseUserMapper courseUserMapper;
     @Override
     public void isJoinTopic(Long userId, Long topicId) {
         UserTopic userTopic = userTopicMapper.findByTopicId(userId, topicId);
+        System.out.println("pipiiii:"+userTopic);
         if (userTopic.getIsReadLabel() == null || userTopic.getIsReadLabel().equals("0")) {
             topicMapper.updateJoinNumberInt(topicId);
+            System.out.println(topicMapper.updateJoinNumberInt(topicId));
             userTopicMapper.updateIsReadLabelInt(userTopic.getUserTopicId());
         }
     }
