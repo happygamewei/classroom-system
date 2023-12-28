@@ -80,16 +80,15 @@ public class MTestController extends BaseController
     @PostMapping("/AddTest")
     public AjaxResult add(@RequestBody Test test)
     {
-        System.out.println(test.getCourse_id()+"444");
         return toAjax(testService.insertTest(test));
     }
 
     /**
      * 修改测试管理
      */
-    @PreAuthorize("@ss.hasPermi('classroom:test:edit')")
+//    @PreAuthorize("@ss.hasPermi('classroom:test:edit')")
     @Log(title = "测试管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/EditTest")
+    @PutMapping
     public AjaxResult edit(@RequestBody Test test)
     {
         return toAjax(testService.updateTest(test));
