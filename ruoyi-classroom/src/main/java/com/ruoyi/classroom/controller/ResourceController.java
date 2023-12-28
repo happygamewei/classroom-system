@@ -119,7 +119,7 @@ public class ResourceController extends BaseController
     /**
      * 删除资料
      */
-    @DeleteMapping("/delete/{resourceId}")
+    @DeleteMapping("/{resourceId}")
     public AjaxResult deleteResourceByResourceId(@PathVariable("resourceId") long resourceId){
         return success(resourceService.deleteResourceByResourceId(resourceId));
     }
