@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.classroom.domain.dto.CourseIsTopDto;
+import com.ruoyi.classroom.domain.vo.CourseTeacherVo;
+import com.ruoyi.classroom.domain.vo.CourseUserVo;
 import com.ruoyi.classroom.domain.vo.CourseVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,18 @@ public class CourseController extends BaseController
 {
     @Autowired
     private ICourseService courseService;
+
+    /**
+     * 成员信息
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/member/{courseId}")
+    public AjaxResult getMemberInfo(@PathVariable Long courseId){
+        CourseUserVo memberInfo = courseService.getMemberInfo(courseId);
+        System.out.println(memberInfo);
+        return success(memberInfo);
+    }
 
     /**
      * 退课

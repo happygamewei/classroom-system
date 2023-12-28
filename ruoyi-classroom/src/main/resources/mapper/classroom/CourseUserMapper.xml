@@ -28,7 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourseUserVo"/>
         where id = #{id}
     </select>
-    <select id="findUserCountByCourse" resultType="com.ruoyi.classroom.domain.CourseUser">
+
+    <select id="findUserCountByCourse" parameterType="Long" resultMap="CourseUserResult">
         <include refid="selectCourseUserVo"/>
         <if test="course_id!=null">
             where course_id=#{courseId}

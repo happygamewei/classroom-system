@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.ruoyi.classroom.domain.Course;
 import com.ruoyi.classroom.domain.vo.CourseContentVo;
+import com.ruoyi.classroom.domain.vo.CourseTeacherVo;
+import com.ruoyi.classroom.domain.vo.CourseUserVo;
 import com.ruoyi.classroom.domain.vo.CourseVo;
 
 /**
@@ -125,4 +127,11 @@ public interface ICourseService
      * @return
      */
     int exitCourse(Long courseId);
+
+    /**
+     * 课程成员
+     * @param courseId
+     * @return
+     */
+    CourseUserVo getMemberInfo(Long courseId);
 }
