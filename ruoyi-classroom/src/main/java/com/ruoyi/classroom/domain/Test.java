@@ -78,6 +78,17 @@ public class Test extends BaseEntity
     @Excel(name = "int	状态，0禁用，1激活")
     private Long status;
 
+    @Excel(name = "课程id")
+    private Long course_id;
+
+    public Long getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(Long course_id) {
+        this.course_id = course_id;
+    }
+
     public void setTestId(Long testId)
     {
         this.testId = testId;

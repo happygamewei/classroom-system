@@ -4,22 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import com.ruoyi.classroom.domain.*;
-import com.ruoyi.classroom.domain.vo.CourseContentVo;
-import com.ruoyi.classroom.domain.vo.CourseTypeVo;
-import com.ruoyi.classroom.domain.vo.CourseVo;
+import com.ruoyi.classroom.domain.vo.*;
 import com.ruoyi.classroom.mapper.*;
 import com.ruoyi.classroom.utils.ClassRoomConstants;
 import com.ruoyi.classroom.utils.RandomStringGenerator;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
-import net.sf.jsqlparser.statement.select.Top;
+import com.ruoyi.system.mapper.SysUserMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import com.ruoyi.classroom.service.ICourseService;
 import org.springframework.util.ObjectUtils;
@@ -57,6 +54,8 @@ public class CourseServiceImpl implements ICourseService
     private  CommentMapper commentMapper;
     @Autowired
     private LikesMapper likesMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
     /**
      * 查询课程管理
      *
@@ -341,5 +340,46 @@ public class CourseServiceImpl implements ICourseService
     public int exitCourse(Long courseId) {
         Long userId = SecurityUtils.getUserId();
         return courseUserMapper.exitCourse(courseId, userId);
+    }
+
+    /**
+     * 查询课程成员
+     * @param courseId
+     * @return
+     */
+    @Override
+    public CourseUserVo getMemberInfo(Long courseId) {
+        List<CourseUser> userCountByCourse = courseUserMapper.findUserCountByCourse(courseId);
+        List<CourseTeacherVo> courseTeacherVos = new ArrayList<>();
+        List<CourseStudentVo> courseStudentVos = new ArrayList<>();
+        userCountByCourse.stream().forEach(courseUser -> {
+            if(ClassRoomConstants.COURSE_TEACH.equals(courseUser.getType())){
+                CourseTeacherVo courseTeacherVo = new CourseTeacherVo();
+                SysUser sysUser = sysUserMapper.selectUserById(courseUser.getUserId());
+                courseTeacherVo.setUserName(sysUser.getUserName());
+                courseTeacherVo.setEmail(sysUser.getEmail());
+                courseTeacherVo.setPhonenumber(sysUser.getPhonenumber());
+                courseTeacherVos.add(courseTeacherVo);
+            } else if (ClassRoomConstants.COURSE_STUDY.equals(courseUser.getType())) {
+                CourseTeacherVo courseTeacherVo = new CourseTeacherVo();
+                SysUser sysUser = sysUserMapper.selectUserById(courseUser.getUserId());
+                courseTeacherVo.setUserName(sysUser.getUserName());
+                courseTeacherVo.setEmail(sysUser.getEmail());
+                courseTeacherVo.setPhonenumber(sysUser.getPhonenumber());
+                courseTeacherVos.add(courseTeacherVo);
+            } else {
+                CourseStudentVo courseStudentVo = new CourseStudentVo();
+                SysUser sysUser = sysUserMapper.selectUserById(courseUser.getUserId());
+                courseStudentVo.setUserName(sysUser.getUserName());
+                courseStudentVo.setEmail(sysUser.getEmail());
+                courseStudentVo.setPhonenumber(sysUser.getPhonenumber());
+                courseStudentVos.add(courseStudentVo);
+            }
+        });
+        CourseUserVo courseUserVo = new CourseUserVo();
+        courseUserVo.setCourseTeacherVos(courseTeacherVos);
+        courseUserVo.setCourseStudentVos(courseStudentVos);
+
+        return courseUserVo;
     }
 }

@@ -46,8 +46,7 @@ public class TopicServiceImpl implements ITopicService {
     private LikesMapper likesMapper;
     @Autowired
     private ChapterContentMapper chapterContentMapper;
-    @Autowired
-    private SysDictDataMapper sysDictDataMapper;
+
     @Autowired
     private SysPermissionService sysPermissionService;
 @Autowired
@@ -86,7 +85,6 @@ private CourseUserMapper courseUserMapper;
      */
     @Override
     public void insertTopic(Long courseId,Topic topic, Long userId) {
-        System.out.println("新增话题："+courseId+","+topic+","+userId);
         topic.setCreateTime(DateUtils.getNowDate());
         topic.setCreateBy(SecurityUtils.getUsername());
         topic.setUserId(userId);
@@ -175,8 +173,6 @@ private CourseUserMapper courseUserMapper;
                     for (String role:roles){
                         topic_user_role=role;
                     }
-
-                    System.out.println("用户橘色："+topic_user_role);
                     TopicVo topicVo = new TopicVo();
                     topicVo.setTopicId(topic.getTopicId());
                     topicVo.setTitle(topic.getTitle());
@@ -219,7 +215,6 @@ private CourseUserMapper courseUserMapper;
     public void likeClick(Long userId, Long topicId) {
         //首先先判断用户是否之前已经点赞过了该话题
         UserTopic userTopic = userTopicMapper.findByTopicId(userId, topicId);
-        System.out.println("用户点赞："+userTopic);
         if (userTopic.getIsLike() != null && userTopic.getIsLike().equals("0")) {
             topicMapper.updateLikeCount(topicId);
             userTopicMapper.updateIsLikeInt2(userTopic.getUserTopicId());
@@ -287,10 +282,9 @@ private CourseUserMapper courseUserMapper;
     @Override
     public void isJoinTopic(Long userId, Long topicId) {
         UserTopic userTopic = userTopicMapper.findByTopicId(userId, topicId);
-        System.out.println("pipiiii:"+userTopic);
-        if (userTopic.getIsReadLabel() == null || userTopic.getIsReadLabel().equals("0")) {
+
+        if (userTopic!=null&&userTopic.getIsReadLabel().equals("0")) {
             topicMapper.updateJoinNumberInt(topicId);
-            System.out.println(topicMapper.updateJoinNumberInt(topicId));
             userTopicMapper.updateIsReadLabelInt(userTopic.getUserTopicId());
         }
     }
@@ -416,11 +410,9 @@ private CourseUserMapper courseUserMapper;
     public List<ChapterVo> getChapterByCourseId(Long courseId) {
         // 查询课程章节关系
         List<CourseChapter> courseChapters = courseChapterMapper.selectChaptersByCourserId(courseId);
-
         // 根据chapterIds查询章节
         List<Long> chapterIds = courseChapters.stream().map(CourseChapter::getChapterId).collect(Collectors.toList());
         List<Chapter> chapterList = chapterMapper.selectChapterByChapterIds(chapterIds);
-
         // 转换成chapterVoList
         List<ChapterVo> chapterVoList = new ArrayList<>();
         chapterList.stream().forEach(chapter -> {
@@ -428,24 +420,19 @@ private CourseUserMapper courseUserMapper;
             BeanUtils.copyProperties(chapter, chapterVo);
             chapterVoList.add(chapterVo);
         });
-
         // 将子目录放在父目录下
         // 将chapterList转换为Map，其中键为parentId，值为具有相同parentId的Chapter对象列表
         Map<Long, List<ChapterVo>> chapterMap = chapterVoList.stream().filter(chapter -> chapter.getParentId() != 0)
                 .collect(Collectors.groupingBy(Chapter::getParentId));
-
         // 遍历chapterList,将具有相同parentId的Chapter对象添加到其父目录的children字段中
         chapterVoList.forEach(chapterVo -> {
             Long chapterId = chapterVo.getChapterId();
-
-
             // 将父目录的id拿到map中比较得到它的子目录
             List<ChapterVo> children = chapterMap.get(chapterId);
             if (children != null) {
                 chapterVo.setChildren(children);
             }
         });
-
         // 去除子目录
         List<ChapterVo> collect = chapterVoList.stream()
                 .filter(chapterVo -> chapterVo.getParentId() == 0)

@@ -60,6 +60,11 @@ public interface CourseUserMapper
      */
     public int deleteCourseUserByIds(Long[] ids);
 
+    /**
+     * 根据课程id查询
+     * @param courseId
+     * @return
+     */
     public List<CourseUser> findUserCountByCourse(Long courseId);
 
     /**
@@ -83,4 +88,5 @@ public interface CourseUserMapper
      * @return
      */
     int exitCourse(@Param("courseId") Long courseId, @Param("userId") Long userId);
+
 }
